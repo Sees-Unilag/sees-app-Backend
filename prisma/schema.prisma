@@ -31,7 +31,7 @@ model Notification {
 model Link {
   id                 String         @id @default(uuid())
   notificationId     String
-  product            Notification   @relation(fields: [notificationId], references: [id])
+  notification       Notification   @relation(fields: [notificationId], references: [id])
   facebook           String?
   instagram          String?
   twitter            String?

@@ -5,8 +5,8 @@ import { CoursesService } from './courses.service';
 import { CoursesController } from './courses.controller';
 
 @Module({
-    imports:[PrismaModule],
-    providers:[CourseRepository, CoursesService],
-    controllers: [CoursesController]
+  imports: [PrismaModule],
+  providers: [CourseRepository, CoursesService],
+  controllers: [CoursesController],
 })
 export class CoursesModule {}

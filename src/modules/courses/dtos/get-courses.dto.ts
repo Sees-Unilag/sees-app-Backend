@@ -1,10 +1,10 @@
-import { Semester, Year } from "@prisma/client";
-import {IsEnum} from "class-validator";
+import { Semester, Year } from '@prisma/client';
+import { IsEnum } from 'class-validator';
 
-export class GetCoursesDto{
-    @IsEnum(Year)
-    year: Year;
+export class GetCoursesDto {
+  @IsEnum(Year)
+  year: Year;
 
-    @IsEnum(Semester)
-    semester:Semester;
+  @IsEnum(Semester)
+  semester: Semester;
 }

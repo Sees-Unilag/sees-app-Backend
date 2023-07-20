@@ -1,9 +1,11 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsInt, IsOptional } from 'class-validator';
 
 export class GetNotificationDto {
-  @IsNotEmpty()
-  title: string;
+  @IsOptional()
+  @IsInt()
+  take: number;
 
-  @IsNotEmpty()
-  text: string;
+  @IsOptional()
+  @IsInt()
+  skip: number;
 }

@@ -12,6 +12,7 @@ export class NotificationsRepository {
     const { where } = params;
     return this.prisma.notification.findUnique({
       where,
+      include: { links: true },
     });
   }
 
@@ -19,12 +20,15 @@ export class NotificationsRepository {
     data: Prisma.NotificationCreateInput;
   }): Promise<Notification> {
     const { data } = params;
-    return this.prisma.notification.create({ data, include: { links: true } });
+    return this.prisma.notification.create({
+      data,
+      include: { links: true },
+    });
   }
 
   async updateNotification(params: {
     where: Prisma.NotificationWhereUniqueInput;
-    data: Prisma.NotificationCreateInput;
+    data: Prisma.NotificationUpdateInput;
   }): Promise<Notification> {
     const { where, data } = params;
     return this.prisma.notification.update({
@@ -34,7 +38,30 @@ export class NotificationsRepository {
     });
   }
 
-  async getNotifications(): Promise<Notification[]> {
-    return this.prisma.notification.findMany({ include: { links: true } });
+  deleteLink(params: { where: Prisma.LinkWhereUniqueInput }) {
+    const { where } = params;
+    return this.prisma.link.delete({
+      where,
+    });
+  }
+
+  deleteNotification(params: { where: Prisma.NotificationWhereUniqueInput }) {
+    const { where } = params;
+    return this.prisma.notification.delete({
+      where,
+      include: { links: true },
+    });
+  }
+
+  async getNotifications(params: {
+    skip?: number;
+    take?: number;
+  }): Promise<Notification[]> {
+    const { skip, take } = params;
+    return this.prisma.notification.findMany({
+      include: { links: true },
+      skip,
+      take,
+    });
   }
 }

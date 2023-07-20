@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { NotificationsRepository } from './notifications.repository';
 import { Notification } from '@prisma/client';
+import { AddNotificationDto } from './dtos/add-notifications.dto';
 
 @Injectable()
 export class NotificationsService {
@@ -24,6 +25,11 @@ export class NotificationsService {
    */
   async getNotifications(): Promise<Notification[]> {
     const notification = await this.repository.getNotifications();
+    return notification;
+  }
+
+  async addNotifications(data: AddNotificationDto): Promise<Notification> {
+    const notification = await this.repository.addNotification({ data });
     return notification;
   }
 }

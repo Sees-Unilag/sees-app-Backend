@@ -19,7 +19,7 @@ export class NotificationsRepository {
     data: Prisma.NotificationCreateInput;
   }): Promise<Notification> {
     const { data } = params;
-    return this.prisma.notification.create({ data });
+    return this.prisma.notification.create({ data, include: { links: true } });
   }
 
   async updateNotification(params: {
@@ -30,10 +30,11 @@ export class NotificationsRepository {
     return this.prisma.notification.update({
       where,
       data,
+      include: { links: true },
     });
   }
 
   async getNotifications(): Promise<Notification[]> {
-    return this.prisma.notification.findMany();
+    return this.prisma.notification.findMany({ include: { links: true } });
   }
 }

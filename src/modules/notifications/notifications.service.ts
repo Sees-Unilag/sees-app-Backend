@@ -37,8 +37,6 @@ export class NotificationsService {
    * @param pageNumber
    */
   async getNotifications(pageNumber: number): Promise<Notification[]> {
-    console.log(pageNumber);
-
     const page = pageNumber > 0 ? pageNumber : 1;
     const skip = (page - 1) * this.perPage;
     const take = this.perPage;

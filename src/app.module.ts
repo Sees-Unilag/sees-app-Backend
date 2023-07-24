@@ -4,9 +4,15 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { ConfigModule } from '@nestjs/config';
 
-
 @Module({
-  imports: [CoursesModule, NotificationsModule, CloudinaryModule,
-  ConfigModule.forRoot({isGlobal:true, envFilePath: [".env", ".env.development"]})],
+  imports: [
+    CoursesModule,
+    NotificationsModule,
+    CloudinaryModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env', '.env.development'],
+    }),
+  ],
 })
 export class AppModule {}

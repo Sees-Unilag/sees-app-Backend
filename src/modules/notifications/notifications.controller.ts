@@ -6,20 +6,21 @@ import {
   Patch,
   Delete,
   Body,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { NotificationInputDto } from './dtos/add-notifications.dto';
-import { GetNotificationDto } from './dtos/get-notifications.dto';
 
 @Controller('notifications')
 export class NotificationsController {
   constructor(private readonly service: NotificationsService) {}
 
   @Get()
-  async getNotifications(@Body() getNotificationDto: GetNotificationDto) {
-    const notifications = await this.service.getNotifications(
-      getNotificationDto,
-    );
+  async getNotifications(
+    @Query('pageNumber', ParseIntPipe) pageNumber: number,
+  ) {
+    const notifications = await this.service.getNotifications(pageNumber);
     return { success: true, notifications };
   }
 

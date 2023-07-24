@@ -3,10 +3,11 @@ import { NotificationsRepository } from './notifications.repository';
 import { Notification } from '@prisma/client';
 import { NotificationInputDto } from './dtos/add-notifications.dto';
 import { PrismaService } from 'src/database/prisma.service';
-import { GetNotificationDto } from './dtos/get-notifications.dto';
 
 @Injectable()
 export class NotificationsService {
+  private perPage: number = +process.env.PER_PAGE;
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly repository: NotificationsRepository,
@@ -33,13 +34,14 @@ export class NotificationsService {
 
   /**
    * Finds a list of notifications correspoding to the pagination
-   * @param skip
-   * @param take
+   * @param pageNumber
    */
-  async getNotifications(
-    getNotificationDto: GetNotificationDto,
-  ): Promise<Notification[]> {
-    const { skip, take } = getNotificationDto;
+  async getNotifications(pageNumber: number): Promise<Notification[]> {
+    console.log(pageNumber);
+
+    const page = pageNumber > 0 ? pageNumber : 1;
+    const skip = (page - 1) * this.perPage;
+    const take = this.perPage;
 
     const notification = await this.repository.getNotifications({ skip, take });
     return notification;

@@ -3,7 +3,7 @@ import { Notification, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 
 @Injectable()
-export class NotificationsRepository {
+export class NotificationRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async getNotification(params: {

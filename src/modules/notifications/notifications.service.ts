@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { NotificationsRepository } from './notifications.repository';
+import { NotificationRepository } from './notifications.repository';
 import { Notification } from '@prisma/client';
 import { NotificationInputDto } from './dtos/add-notifications.dto';
 import { PrismaService } from 'src/database/prisma.service';
@@ -10,7 +10,7 @@ export class NotificationsService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly repository: NotificationsRepository,
+    private readonly repository: NotificationRepository,
   ) {}
 
   /**

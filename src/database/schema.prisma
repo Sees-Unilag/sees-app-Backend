@@ -15,7 +15,7 @@ datasource db {
 
 model Admin {
   id        String   @id @default(uuid())
-  username  String   @db.VarChar(255)
+  username  String   @db.VarChar(255)  @unique
   password  String   @db.VarChar(255)
 }
 

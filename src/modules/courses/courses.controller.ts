@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Param } from '@nestjs/common';
+import { Controller, Get, Body, Param, Patch } from '@nestjs/common';
 import { GetCoursesDto } from './dtos/get-courses.dto';
 import { CoursesService } from './courses.service';
 
@@ -14,7 +14,13 @@ export class CoursesController {
 
   @Get(':id')
   async getCourse(@Param('id') id: string) {
-    const course = this.service.getCourse(id);
+    const course = await this.service.getCourse(id);
     return { success: true, course };
+  }
+
+  @Patch('document/:id')
+  async verifyDocument(@Param('id') id: string) {
+    const document = await this.service.verifyDocument(id);
+    return document;
   }
 }

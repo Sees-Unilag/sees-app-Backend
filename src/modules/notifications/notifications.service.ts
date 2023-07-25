@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { NotificationRepository } from './notifications.repository';
 import { Notification } from '@prisma/client';
 import { NotificationInputDto } from './dtos/add-notifications.dto';
@@ -6,6 +11,7 @@ import { PrismaService } from 'src/database/prisma.service';
 
 @Injectable()
 export class NotificationsService {
+  private loogger = new Logger('NotificationsService');
   private perPage: number = +process.env.PER_PAGE;
 
   constructor(
@@ -19,9 +25,17 @@ export class NotificationsService {
    * @returns the notification
    */
   async getNotification(id: string): Promise<Notification | null> {
-    const notification = await this.repository.getNotification({
-      where: { id },
-    });
+    let notification: Notification;
+    try {
+      notification = await this.repository.getNotification({
+        where: { id },
+      });
+    } catch (error) {
+      this.loogger.error(error.message);
+      throw new InternalServerErrorException(
+        'An unexpected error has occurred, please try again later',
+      );
+    }
 
     if (!notification) {
       throw new NotFoundException(
@@ -40,9 +54,18 @@ export class NotificationsService {
     const page = pageNumber > 0 ? pageNumber : 1;
     const skip = (page - 1) * this.perPage;
     const take = this.perPage;
+    let notifications: Notification[];
 
-    const notification = await this.repository.getNotifications({ skip, take });
-    return notification;
+    try {
+      notifications = await this.repository.getNotifications({ skip, take });
+    } catch (error) {
+      this.loogger.error(error.message);
+      throw new InternalServerErrorException(
+        'An unexpected error has occurred, please try again later',
+      );
+    }
+
+    return notifications;
   }
 
   /**
@@ -57,7 +80,16 @@ export class NotificationsService {
   ): Promise<Notification> {
     const { title, text, imageUrl, links } = addNotificationDto;
     const data = { title, text, imageUrl, links: { create: links } };
-    const notification = this.repository.addNotification({ data });
+
+    let notification: Notification;
+    try {
+      notification = await this.repository.addNotification({ data });
+    } catch (error) {
+      this.loogger.error(error.message);
+      throw new InternalServerErrorException(
+        'An unexpected error has occurred, please try again later',
+      );
+    }
     return notification;
   }
 
@@ -93,10 +125,19 @@ export class NotificationsService {
       },
     };
 
-    const notification = await this.repository.updateNotification({
-      data,
-      where: { id: found.id },
-    });
+    let notification: Notification;
+    try {
+      notification = await this.repository.updateNotification({
+        data,
+        where: { id: found.id },
+      });
+    } catch (error) {
+      this.loogger.error(error.message);
+      throw new InternalServerErrorException(
+        'An unexpected error has occurred, please try again later',
+      );
+    }
+
     return notification;
   }
 

@@ -11,7 +11,7 @@ import { PrismaService } from 'src/database/prisma.service';
 
 @Injectable()
 export class NotificationsService {
-  private loogger = new Logger('NotificationsService');
+  private logger = new Logger('NotificationsService');
   private perPage: number = +process.env.PER_PAGE;
 
   constructor(
@@ -31,7 +31,7 @@ export class NotificationsService {
         where: { id },
       });
     } catch (error) {
-      this.loogger.error(error.message);
+      this.logger.error(error.message);
       throw new InternalServerErrorException(
         'An unexpected error has occurred, please try again later',
       );
@@ -59,7 +59,7 @@ export class NotificationsService {
     try {
       notifications = await this.repository.getNotifications({ skip, take });
     } catch (error) {
-      this.loogger.error(error.message);
+      this.logger.error(error.message);
       throw new InternalServerErrorException(
         'An unexpected error has occurred, please try again later',
       );
@@ -85,7 +85,7 @@ export class NotificationsService {
     try {
       notification = await this.repository.addNotification({ data });
     } catch (error) {
-      this.loogger.error(error.message);
+      this.logger.error(error.message);
       throw new InternalServerErrorException(
         'An unexpected error has occurred, please try again later',
       );
@@ -132,7 +132,7 @@ export class NotificationsService {
         where: { id: found.id },
       });
     } catch (error) {
-      this.loogger.error(error.message);
+      this.logger.error(error.message);
       throw new InternalServerErrorException(
         'An unexpected error has occurred, please try again later',
       );

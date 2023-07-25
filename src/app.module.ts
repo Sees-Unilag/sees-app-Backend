@@ -3,6 +3,7 @@ import { CoursesModule } from './modules/courses/courses.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { ConfigModule } from '@nestjs/config';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
       envFilePath: ['.env', '.env.development'],
     }),
+    AdminModule,
   ],
 })
 export class AppModule {}

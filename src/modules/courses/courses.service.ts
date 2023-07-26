@@ -10,8 +10,10 @@ import FileUploadService from '../file-upload/file_upload.interface';
 
 @Injectable()
 export class CoursesService {
-  constructor(private readonly repository: CourseRepository,
-    private readonly fileUploadService:FileUploadService) {}
+  constructor(
+    private readonly repository: CourseRepository,
+    private readonly fileUploadService: FileUploadService,
+  ) {}
 
   /**
    * Takes in the course Id and returns the course with given id if any
@@ -36,9 +38,11 @@ export class CoursesService {
     return courses;
   }
 
-  async addDocument(File:Express.Multer.File, courseId:string){
+  async addDocument(File: Express.Multer.File, courseId: string) {
     const link = await this.fileUploadService.uploadFile(File);
-    await this.repository.addDocument({data: {link, course: {connect: {id:courseId}}}})
+    await this.repository.addDocument({
+      data: { link, course: { connect: { id: courseId } } },
+    });
   }
 
   /**
@@ -56,11 +60,10 @@ export class CoursesService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException('A document with this id does not exist');
-      }else{
+      } else {
         throw new InternalServerErrorException();
       }
-      }
+    }
     return document;
-  }}
-  
-
+  }
+}

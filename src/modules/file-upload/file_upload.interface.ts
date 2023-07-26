@@ -1,5 +1,4 @@
 export default abstract class FileUploadService {
-    abstract uploadFile(file: Express.Multer.File): Promise<string>;
-    abstract uploadFiles(files: Express.Multer.File[]): Promise<string[]>;
+  abstract uploadFile(file: Express.Multer.File): Promise<string>;
+  abstract uploadFiles(files: Express.Multer.File[]): Promise<string[]>;
 }
-  

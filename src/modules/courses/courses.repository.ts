@@ -40,10 +40,10 @@ export class CourseRepository {
     });
   }
 
-  async addDocument(params: {data: Prisma.DocumentCreateInput}){
-    const {data} = params;
+  async addDocument(params: { data: Prisma.DocumentCreateInput }) {
+    const { data } = params;
     const document = await this.prisma.document.create({
-      data
+      data,
     });
     return document;
   }

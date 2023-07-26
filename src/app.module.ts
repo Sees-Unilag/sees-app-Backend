@@ -5,7 +5,6 @@ import { AdminsModule } from './modules/admins/admins.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { ConfigModule } from '@nestjs/config';
 
-
 @Module({
   imports: [
     CoursesModule,

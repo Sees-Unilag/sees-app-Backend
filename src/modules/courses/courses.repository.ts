@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Course, Prisma } from '@prisma/client';
+import { Course, Document, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 
 @Injectable()
@@ -38,5 +38,16 @@ export class CourseRepository {
     return this.prisma.course.findMany({
       where,
     });
+  }
+
+  async verifyDocument(params: {
+    where: Prisma.DocumentWhereUniqueInput;
+  }): Promise<Document> {
+    const { where } = params;
+    const document = this.prisma.document.update({
+      where,
+      data: { verified: true },
+    });
+    return document;
   }
 }

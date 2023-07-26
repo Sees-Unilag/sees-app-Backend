@@ -16,4 +16,11 @@ export const coursesJson: Prisma.CourseCreateInput[] = [
     year: Year.ONE,
     semester: Semester.FIRST,
   },
+  {
+    name: 'Workshop Practice',
+    unit: 2,
+    courseCode: 'MEG101',
+    year: Year.ONE,
+    semester: Semester.FIRST,
+  },
 ];

@@ -1,12 +1,8 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { NotificationRepository } from './notifications.repository';
 import { Notification } from '@prisma/client';
 import { NotificationInputDto } from './dtos/add-notifications.dto';
 import { PrismaService } from 'src/database/prisma.service';
-
 
 @Injectable()
 export class NotificationsService {
@@ -41,7 +37,10 @@ export class NotificationsService {
     const page = pageNumber > 0 ? pageNumber : 1;
     const skip = (page - 1) * this.perPage;
     const take = this.perPage;
-    const notifications = await this.repository.getNotifications({ skip, take });
+    const notifications = await this.repository.getNotifications({
+      skip,
+      take,
+    });
     return notifications;
   }
 

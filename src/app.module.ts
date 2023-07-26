@@ -6,6 +6,7 @@ import { FileUploadModule } from './modules/file-upload/file_upload.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './common/exception/global-expection-filter';
+import LoggerModule from './common/logging/logger.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AllExceptionsFilter } from './common/exception/global-expection-filter'
       envFilePath: ['.env', '.env.development'],
     }),
     AdminsModule,
+    LoggerModule
   ],
   providers: [
     {

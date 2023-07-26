@@ -15,7 +15,7 @@ datasource db {
 
 model Admin {
   id        String   @id @default(uuid())
-  username  String   @db.VarChar(255)
+  username  String   @db.VarChar(255)  @unique
   password  String   @db.VarChar(255)
 }
 
@@ -24,13 +24,13 @@ model Notification {
   imageUrl  String
   title     String   
   text      String   @db.Text
-  links     Link[]
+  links     Link?
 }
 
 
 model Link {
   id                 String         @id @default(uuid())
-  notificationId     String
+  notificationId     String         @unique
   notification       Notification   @relation(fields: [notificationId], references: [id])
   facebook           String?
   instagram          String?

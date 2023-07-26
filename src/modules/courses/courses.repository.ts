@@ -40,6 +40,14 @@ export class CourseRepository {
     });
   }
 
+  async addDocument(params: {data: Prisma.DocumentCreateInput}){
+    const {data} = params;
+    const document = await this.prisma.document.create({
+      data
+    });
+    return document;
+  }
+
   async verifyDocument(params: {
     where: Prisma.DocumentWhereUniqueInput;
   }): Promise<Document> {

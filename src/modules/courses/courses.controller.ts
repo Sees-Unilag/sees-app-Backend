@@ -1,6 +1,8 @@
-import { Controller, Get, Body, Param, Patch } from '@nestjs/common';
+import { Controller, Get, Body, Param, Patch, UseGuards, Post, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator } from '@nestjs/common';
+import {FileInterceptor} from "@nestjs/platform-express"
 import { GetCoursesDto } from './dtos/get-courses.dto';
 import { CoursesService } from './courses.service';
+import { AdminGuard } from '../admins/admin.guard';
 
 @Controller('courses')
 export class CoursesController {
@@ -18,9 +20,25 @@ export class CoursesController {
     return { success: true, course };
   }
 
-  @Patch('document/:id')
+  @Post(':id/documents')
+  @UseInterceptors(FileInterceptor('file'))
+  async addDocument(@UploadedFile(
+    new ParseFilePipe({
+      validators: [
+        new MaxFileSizeValidator({ maxSize: 1000 * 1024 * 1024}),
+        new FileTypeValidator({ fileType: 'application/pdf' }),
+      ],
+    }),
+  )file:Express.Multer.File, @Param('id')id:string){
+      await this.service.addDocument(file, id);
+      return {success:true, message:"Document Successfully Added"}
+  }
+
+
+  @UseGuards(AdminGuard)
+  @Patch('documents/:id')
   async verifyDocument(@Param('id') id: string) {
     const document = await this.service.verifyDocument(id);
-    return document;
-  }
+    return {sucess:true, message:"Verification Successful", document}
+}
 }

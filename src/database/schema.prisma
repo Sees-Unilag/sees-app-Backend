@@ -41,7 +41,8 @@ model Link {
 
 model Course {
   id             String         @id @default(uuid())
-  name           String         @db.VarChar(255)
+  name           String         @db.VarChar(255)  @unique
+  courseCode     String         @unique
   unit           Int
   year           Year
   semester       Semester

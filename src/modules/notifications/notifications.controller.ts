@@ -8,9 +8,11 @@ import {
   Body,
   Query,
   ParseIntPipe,
+  UseGuards
 } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { NotificationInputDto } from './dtos/add-notifications.dto';
+import { AdminGuard } from '../admins/admin.guard';
 
 @Controller('notifications')
 export class NotificationsController {
@@ -30,6 +32,7 @@ export class NotificationsController {
     return { success: true, notification };
   }
 
+  @UseGuards(AdminGuard)
   @Post()
   async addNotifications(@Body() addNotificationDto: NotificationInputDto) {
     const notification = await this.service.addNotifications(
@@ -38,6 +41,7 @@ export class NotificationsController {
     return { success: true, notification };
   }
 
+  @UseGuards(AdminGuard)
   @Patch(':id')
   async updateNotification(
     @Param('id') id: string,
@@ -49,6 +53,8 @@ export class NotificationsController {
     );
     return { success: true, notification };
   }
+
+  @UseGuards(AdminGuard)
   @Delete(':id')
   async deleteNotification(@Param('id') id: string) {
     const notification = await this.service.deleteNotification(id);

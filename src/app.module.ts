@@ -4,7 +4,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { AdminsModule } from './modules/admins/admins.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { ConfigModule } from '@nestjs/config';
-import {APP_FILTER} from "@nestjs/core"
+import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './common/exception/global-expection-filter';
 
 @Module({
@@ -17,9 +17,12 @@ import { AllExceptionsFilter } from './common/exception/global-expection-filter'
       envFilePath: ['.env', '.env.development'],
     }),
     AdminsModule,
-  ], providers: [{
-    provide: APP_FILTER,
-    useClass: AllExceptionsFilter
-  }]
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+  ],
 })
 export class AppModule {}

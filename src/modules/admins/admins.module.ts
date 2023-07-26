@@ -9,6 +9,6 @@ import { AdminGuard } from './admin.guard';
   imports: [PrismaModule],
   controllers: [AdminsController],
   providers: [AdminsService, AdminRepository, AdminGuard],
-  exports:[AdminGuard]
+  exports: [AdminGuard],
 })
 export class AdminsModule {}

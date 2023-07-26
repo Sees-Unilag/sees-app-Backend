@@ -8,7 +8,7 @@ import {
   Body,
   Query,
   ParseIntPipe,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { NotificationInputDto } from './dtos/add-notifications.dto';

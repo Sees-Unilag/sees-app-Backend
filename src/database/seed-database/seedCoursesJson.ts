@@ -1,22 +1,19 @@
-import { Prisma, Semester, Year } from "@prisma/client";
+import { Prisma, Semester, Year } from '@prisma/client';
 
-export const courses: Prisma.CourseCreateInput[] = [ 
-    {
-    name:"Engineering Pure Mathematics I",
+export const coursesJson: Prisma.CourseCreateInput[] = [
+  {
+    name: 'Engineering Pure Mathematics I',
     unit: 3,
-    courseCode: "GEG101",
+    courseCode: 'GEG101',
     year: Year.ONE,
-    semester: Semester.FIRST
-    },
+    semester: Semester.FIRST,
+  },
 
-    {
-    name:"Engineering Applied Maths1",
+  {
+    name: 'Engineering Applied Maths1',
     unit: 3,
-    courseCode: "GEG103",
+    courseCode: 'GEG103',
     year: Year.ONE,
-    semester: Semester.FIRST
-    },
-    
-    
-
-]
+    semester: Semester.FIRST,
+  },
+];

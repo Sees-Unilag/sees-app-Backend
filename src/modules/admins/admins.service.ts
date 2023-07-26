@@ -60,16 +60,18 @@ export class AdminsService {
     const { username, password } = authCredentialsDto;
 
     const admin = await this.repository.findAdmin({
-      where: { username: username.toLowerCase() },
+      where: { username: username },
     });
     if (!admin) {
-      throw new UnauthorizedException('Username does not exist');
+      throw new UnauthorizedException('Invalid Username or Password');
     }
 
     const isSame: boolean = await compare(password, admin.password);
     if (!isSame) {
-      throw new UnauthorizedException('Password is invalid');
+      throw new UnauthorizedException('Invalid Username or Password');
     }
+
+    // todo: This should return access and refresh Tokens
     return admin;
   }
 }

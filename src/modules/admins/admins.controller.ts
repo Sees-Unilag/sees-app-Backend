@@ -15,7 +15,7 @@ export class AdminsController {
 
   @Post('signin')
   async signIn(@Body() authCredentialsDto: AuthCredentialsDto) {
-    const user = await this.service.signIn(authCredentialsDto);
-    return { success: true, user }; // should return access and refresh tokens
+    const tokens = await this.service.signIn(authCredentialsDto);
+    return { success: true, tokens }; // should return access and refresh tokens
   }
 }

@@ -19,4 +19,22 @@ export class AdminRepository {
     const admin = this.prisma.admin.findUnique({ where });
     return admin;
   }
+
+  public async createRefreshToken(
+    data: Prisma.RefreshTokenCreateInput,
+  ): Promise<void> {
+    await this.prisma.refreshToken.create({
+      data,
+    });
+  }
+  
+  public getRefreshToken = async(refreshToken:string)=>{
+    const token = await this.prisma.refreshToken.findUnique({ where: {  token: refreshToken } });
+    return token;
+  }
+
+  public deleteRefreshToken = async(refreshToken:string):Promise<void>=>{
+      await this.prisma.refreshToken.delete({ where: { token: refreshToken } });        
+  }
+
 }

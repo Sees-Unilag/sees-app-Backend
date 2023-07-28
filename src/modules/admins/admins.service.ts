@@ -10,12 +10,15 @@ import { CreateAdminDto } from './dtos/create-admin.dto';
 import { Admin } from '@prisma/client';
 import { compare, hash } from 'bcryptjs';
 import { AuthCredentialsDto } from './dtos/auth-credentials.dto';
+import { JwtService } from '@nestjs/jwt';
+import ISignInResponse from './interface/signInResponse.interface';
 
 @Injectable()
 export class AdminsService {
   private logger = new Logger('AdminService');
 
-  constructor(private readonly repository: AdminRepository) {}
+  constructor(private readonly repository: AdminRepository,
+    private readonly jwtService:JwtService) {}
 
   /**
    * Registers an admin if the credentials are valid
@@ -56,7 +59,7 @@ export class AdminsService {
    * @returns the admin
    */
 
-  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<Admin> {
+  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<ISignInResponse> {
     const { username, password } = authCredentialsDto;
 
     const admin = await this.repository.findAdmin({
@@ -71,7 +74,47 @@ export class AdminsService {
       throw new UnauthorizedException('Invalid Username or Password');
     }
 
-    // todo: This should return access and refresh Tokens
-    return admin;
+    return await this.generateToken(admin);
+  
+}
+
+  
+  /**
+   * Generates the access Token and refresh token from the user object
+   * Add the Refresh Token to the database and attach to the user
+   * @param user
+   * @returns
+   */
+  private async generateToken(admin:Admin):Promise<ISignInResponse>{
+    const accessToken = this.createAcessToken(admin);
+    const refreshToken = this.createRefreshToken(admin);
+    const refreshTokenTime = process.env.REFRESHTOKEN_TIME as unknown as number; // no of days
+    const expiresAt = new Date(
+      Date.now() + refreshTokenTime * 24 * 60 * 60 * 1000,
+    );
+    const id = admin.id;
+    await this.repository.createRefreshToken({
+      token: refreshToken,
+      expiresAt,
+      admin: { connect: { id } },
+    });
+    return { refreshToken, accessToken };
   }
+
+  private createAcessToken = (admin:Admin) => {
+    return this.jwtService.sign(
+      { id: admin.id, type: 'access' },
+      { expiresIn: process.env.ACCESSTOKEN_EXPIRY },
+    );
+  };
+
+  private createRefreshToken = (admin:Admin) => {
+    return this.jwtService.sign(
+      { id: admin.id, type: 'refresh' },
+      {
+        expiresIn: process.env.REFRESHTOKEN_EXPIRY,
+      },
+    );
+  };
+
 }

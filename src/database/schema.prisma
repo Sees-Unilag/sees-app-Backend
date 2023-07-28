@@ -17,6 +17,7 @@ model Admin {
   id        String   @id @default(uuid())
   username  String   @db.VarChar(255)  @unique
   password  String   @db.VarChar(255)
+  refreshTokens RefreshToken[]
 }
 
 model Notification {
@@ -26,7 +27,6 @@ model Notification {
   text      String   @db.Text
   links     Link?
 }
-
 
 model Link {
   id                 String         @id @default(uuid())
@@ -56,6 +56,15 @@ model Document {
   course      Course     @relation(fields: [courseId], references: [id])
   verified    Boolean    @default(false)
   createdAt   DateTime   @default(now())
+}
+
+model RefreshToken {
+  id            String      @id @default(uuid())
+  adminId String
+  token         String      @unique
+  createdAt     DateTime    @default(now())
+  expiresAt     DateTime
+  admin  Admin @relation(fields: [adminId], references: [id])
 }
 
 enum Semester {

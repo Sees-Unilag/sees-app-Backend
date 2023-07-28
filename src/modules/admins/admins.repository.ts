@@ -27,14 +27,15 @@ export class AdminRepository {
       data,
     });
   }
-  
-  public getRefreshToken = async(refreshToken:string)=>{
-    const token = await this.prisma.refreshToken.findUnique({ where: {  token: refreshToken } });
+
+  public getRefreshToken = async (refreshToken: string) => {
+    const token = await this.prisma.refreshToken.findUnique({
+      where: { token: refreshToken },
+    });
     return token;
-  }
+  };
 
-  public deleteRefreshToken = async(refreshToken:string):Promise<void>=>{
-      await this.prisma.refreshToken.delete({ where: { token: refreshToken } });        
-  }
-
+  public deleteRefreshToken = async (refreshToken: string): Promise<void> => {
+    await this.prisma.refreshToken.delete({ where: { token: refreshToken } });
+  };
 }

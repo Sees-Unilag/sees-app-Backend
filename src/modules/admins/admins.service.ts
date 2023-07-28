@@ -17,8 +17,10 @@ import ISignInResponse from './interface/signInResponse.interface';
 export class AdminsService {
   private logger = new Logger('AdminService');
 
-  constructor(private readonly repository: AdminRepository,
-    private readonly jwtService:JwtService) {}
+  constructor(
+    private readonly repository: AdminRepository,
+    private readonly jwtService: JwtService,
+  ) {}
 
   /**
    * Registers an admin if the credentials are valid
@@ -59,7 +61,9 @@ export class AdminsService {
    * @returns the admin
    */
 
-  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<ISignInResponse> {
+  async signIn(
+    authCredentialsDto: AuthCredentialsDto,
+  ): Promise<ISignInResponse> {
     const { username, password } = authCredentialsDto;
 
     const admin = await this.repository.findAdmin({
@@ -75,17 +79,15 @@ export class AdminsService {
     }
 
     return await this.generateToken(admin);
-  
-}
+  }
 
-  
   /**
    * Generates the access Token and refresh token from the user object
    * Add the Refresh Token to the database and attach to the user
    * @param user
    * @returns
    */
-  private async generateToken(admin:Admin):Promise<ISignInResponse>{
+  private async generateToken(admin: Admin): Promise<ISignInResponse> {
     const accessToken = this.createAcessToken(admin);
     const refreshToken = this.createRefreshToken(admin);
     const refreshTokenTime = process.env.REFRESHTOKEN_TIME as unknown as number; // no of days
@@ -101,14 +103,14 @@ export class AdminsService {
     return { refreshToken, accessToken };
   }
 
-  private createAcessToken = (admin:Admin) => {
+  private createAcessToken = (admin: Admin) => {
     return this.jwtService.sign(
       { id: admin.id, type: 'access' },
       { expiresIn: process.env.ACCESSTOKEN_EXPIRY },
     );
   };
 
-  private createRefreshToken = (admin:Admin) => {
+  private createRefreshToken = (admin: Admin) => {
     return this.jwtService.sign(
       { id: admin.id, type: 'refresh' },
       {
@@ -116,5 +118,4 @@ export class AdminsService {
       },
     );
   };
-
 }

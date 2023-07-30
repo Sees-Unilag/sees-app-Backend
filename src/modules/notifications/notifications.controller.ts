@@ -58,6 +58,9 @@ export class NotificationsController {
   @Delete(':id')
   async deleteNotification(@Param('id') id: string) {
     await this.service.deleteNotification(id);
-    return { success: true, message:"Notification has been deleted successfully" };
+    return {
+      success: true,
+      message: 'Notification has been deleted successfully',
+    };
   }
 }

@@ -100,13 +100,14 @@ export class NotificationsService {
   }
 
   /**
-   * 
+   * Check if a notification with a given Id exists and delete if true.
    * @param id
    * @returns the deleted notification
    */
-  async deleteNotification(id: string):Promise<void> {
+  async deleteNotification(id: string): Promise<void> {
     const found = await this.getNotification(id);
-    if(found){
-    await this.repository.deleteNotification({ where: { id } }); }
-   
-  }}
+    if (found) {
+      await this.repository.deleteNotification({ where: { id } });
+    }
+  }
+}

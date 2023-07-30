@@ -100,24 +100,13 @@ export class NotificationsService {
   }
 
   /**
-   * Updates a notification by id.
+   * 
    * @param id
    * @returns the deleted notification
    */
-  async deleteNotification(id: string) {
+  async deleteNotification(id: string):Promise<void> {
     const found = await this.getNotification(id);
-
-    if (!(found as unknown as NotificationInputDto).links) {
-      /**
-       *if perchance the 'links' for this notification is already deleted
-       */
-      return this.repository.deleteNotification({ where: { id } });
-    } else {
-      const [links, notification] = await this.prisma.$transaction([
-        this.repository.deleteLink({ where: { notificationId: found.id } }),
-        this.repository.deleteNotification({ where: { id } }),
-      ]);
-      return { ...notification, links };
-    }
-  }
-}
+    if(found){
+    await this.repository.deleteNotification({ where: { id } }); }
+   
+  }}

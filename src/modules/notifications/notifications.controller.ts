@@ -57,7 +57,7 @@ export class NotificationsController {
   @UseGuards(AdminGuard)
   @Delete(':id')
   async deleteNotification(@Param('id') id: string) {
-    const notification = await this.service.deleteNotification(id);
-    return { success: true, notification };
+    await this.service.deleteNotification(id);
+    return { success: true, message:"Notification has been deleted successfully" };
   }
 }

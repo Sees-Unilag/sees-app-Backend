@@ -10,7 +10,7 @@ export function MatchesWith(
 ) {
   return function (object: object, propertyName: string) {
     registerDecorator({
-      name: 'isLongerThan',
+      name: 'MatchesWith',
       target: object.constructor,
       propertyName: propertyName,
       constraints: [property],

@@ -90,7 +90,7 @@ export class AdminsService {
   private async generateToken(admin: Admin): Promise<ISignInResponse> {
     const accessToken = this.createAcessToken(admin);
     const refreshToken = this.createRefreshToken(admin);
-    const refreshTokenTime = process.env.REFRESHTOKEN_TIME as unknown as number; // no of days
+    const refreshTokenTime = process.env.REFRESHTOKEN_EXPIRY as unknown as number; // no of days
     const expiresAt = new Date(
       Date.now() + refreshTokenTime * 24 * 60 * 60 * 1000,
     );

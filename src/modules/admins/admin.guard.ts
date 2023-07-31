@@ -25,7 +25,7 @@ export class AdminGuard implements CanActivate {
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get('SECRET'),
+        secret: this.configService.get('JWT_SECRET'),
       });
       const user = await this.prisma.admin.findUnique({
         where: { id: payload.id },

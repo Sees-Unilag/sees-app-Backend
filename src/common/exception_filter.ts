@@ -4,14 +4,15 @@ import {
   ArgumentsHost,
   HttpException,
   HttpStatus,
-  NotFoundException
+  NotFoundException,
+  Inject
 } from '@nestjs/common';
-import LoggerService from 'src/modules/logging/logger.interface';
+import { LoggerService } from 'src/modules/logging';
 import { Request, Response } from 'express';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
-  constructor(private readonly logger: LoggerService) {}
+  @Inject() private readonly logger: LoggerService
 
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();

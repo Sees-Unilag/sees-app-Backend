@@ -1,6 +1,6 @@
-import { Injectable, NestMiddleware, createParamDecorator, ExecutionContext, BadRequestException } from "@nestjs/common";
+import { Injectable, NestMiddleware, createParamDecorator, ExecutionContext, BadRequestException, Inject } from "@nestjs/common";
 import { NextFunction, Request, Response } from 'express';
-import LoggerService from "src/modules/logging/logger.interface";
+import { LoggerService } from "src/modules/logging";
 import { isUUID } from "class-validator";
 
 /**
@@ -26,7 +26,7 @@ const sensitiveDetails = ['token', 'code', 'password'];
  */
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-  constructor(private readonly logger: LoggerService) {}
+  @Inject() private readonly logger:LoggerService;
 
   use(req: Request, res: Response, next: NextFunction): void {
     const { ip, method, originalUrl } = req;

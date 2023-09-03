@@ -5,16 +5,17 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
-import { PrismaService } from 'src/database/prisma.service';
+import { PrismaService } from 'src/db';
+import { env } from 'src/config';
+import { LoggerService } from 'src/common';
 
 @Injectable()
 export class AdminGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
-    private readonly configService: ConfigService,
+    private readonly logger: LoggerService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -25,7 +26,7 @@ export class AdminGuard implements CanActivate {
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get('JWT_SECRET'),
+        secret: env.jwt_secret,
       });
       const user = await this.prisma.admin.findUnique({
         where: { id: payload.id },
@@ -36,6 +37,7 @@ export class AdminGuard implements CanActivate {
       request['user'] = payload;
       return true;
     } catch {
+      this.logger.error('Invalid or Expired Token')
       throw new UnauthorizedException('Invalid or Expired Token');
     }
   }

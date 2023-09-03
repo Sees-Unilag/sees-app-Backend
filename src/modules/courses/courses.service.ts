@@ -1,19 +1,14 @@
-import {
-  Injectable,
-  NotFoundException,
-  InternalServerErrorException,
-} from '@nestjs/common';
-import { CourseRepository } from './courses.repository';
-import { Course, Document } from '@prisma/client';
-import { GetCoursesDto } from './dtos/get-courses.dto';
-import FileUploadService from '../file-upload/file_upload.interface';
+import { Inject, Injectable } from '@nestjs/common';
+import { CourseRepository, GetCoursesDto } from './';
+import { Course } from '@prisma/client';
+import {FileUploadService} from '../file-upload/';
+import { LoggerService } from 'src/common';
 
 @Injectable()
 export class CoursesService {
-  constructor(
-    private readonly repository: CourseRepository,
-    private readonly fileUploadService: FileUploadService,
-  ) {}
+    @Inject() private readonly repository: CourseRepository;
+    @Inject() private readonly fileUploadService: FileUploadService;
+    @Inject() private readonly logger: LoggerService
 
   /**
    * Takes in the course Id and returns the course with given id if any
@@ -21,7 +16,7 @@ export class CoursesService {
    * @returns the course
    */
   async getCourse(id: string): Promise<Course | null> {
-    const course = await this.repository.getCourse({ where: { id } });
+    const course = await this.repository.getCourse({ id });
     return course;
   }
 
@@ -32,38 +27,26 @@ export class CoursesService {
    */
   async getCourses(getCoursesDto: GetCoursesDto): Promise<Course[]> {
     const { year, semester } = getCoursesDto;
-    const courses = await this.repository.getCourses({
-      where: { year, semester },
-    });
-    return courses;
-  }
-
-  async addDocument(File: Express.Multer.File, courseId: string) {
-    const link = await this.fileUploadService.uploadFile(File);
-    await this.repository.addDocument({
-      data: { link, course: { connect: { id: courseId } } },
-    });
+    return await this.repository.getCourses({ year, semester });
   }
 
   /**
-   * Takes in the document Id and returns the document with given id if any
-   * @param id - document id
-   * @returns the document
-   *
+   * Uploads a file to the cloud storage service
+   * @param File 
+   * @param filename 
+   * @param courseId 
    */
-  async verifyDocument(id: string) {
-    let document: Document;
-    try {
-      document = await this.repository.verifyDocument({
-        where: { id },
-      });
-    } catch (error) {
-      if (error.code === 'P2025') {
-        throw new NotFoundException('A document with this id does not exist');
-      } else {
-        throw new InternalServerErrorException();
-      }
-    }
-    return document;
+  async addDocument(
+    File: Express.Multer.File,
+    filename: string,
+    courseId: string,
+  ) {
+    const link = await this.fileUploadService.uploadFile(File);
+    await this.repository.addDocument({
+      name: filename,
+      link,
+      course: { connect: { id: courseId } },
+    });
+    this.logger.log(`New Document Added for CourseId:${courseId}, filename:${filename}`)
   }
 }

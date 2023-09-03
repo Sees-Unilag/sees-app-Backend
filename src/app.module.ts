@@ -1,26 +1,30 @@
-import { Module } from '@nestjs/common';
-import { CoursesModule } from './modules/courses/courses.module';
-import { NotificationsModule } from './modules/notifications/notifications.module';
-import { AdminsModule } from './modules/admins/admins.module';
-import { FileUploadModule } from './modules/file-upload/file_upload.module';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+//import { CoursesModule } from './modules/courses';
+import { NotificationsModule } from './modules/notifications';
+//import { AdminsModule } from './modules/admins';
+import { FileUploadModule } from './modules/file-upload';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
-import { AllExceptionsFilter } from './common/global-expection-filter';
-import LoggerModule from './modules/logging/logger.module';
+import {AllExceptionsFilter, LoggerMiddleware, LoggerService}  from './common/';
+import cloudinarConfig from './config/cloudinary';
+import { PrismaModule } from './db';
+import { AdminsModule } from './modules/admins';
+import { CoursesModule } from './modules/courses';
 
 @Module({
   imports: [
-    CoursesModule,
-    NotificationsModule,
+    //CoursesModule,
     FileUploadModule,
+    PrismaModule,
+    //AdminsModule,
+    //NotificationsModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env', '.env.development'],
+      load: [cloudinarConfig],
     }),
-    AdminsModule,
-    LoggerModule,
   ],
   providers: [
+    LoggerService,
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,

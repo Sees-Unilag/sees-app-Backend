@@ -15,7 +15,7 @@ datasource db {
 
 model Admin {
   id        String   @id @default(uuid())
-  username  String   @db.VarChar(255)  @unique
+  username  String   @db.VarChar(255) 
   password  String   @db.VarChar(255)
   refreshTokens RefreshToken[]
 }
@@ -41,7 +41,7 @@ model Link {
 
 model Course {
   id             String         @id @default(uuid())
-  name           String         @db.VarChar(255)  @unique
+  name           String         @db.VarChar(255)
   courseCode     String         @unique
   unit           Int
   year           Year
@@ -52,9 +52,10 @@ model Course {
 model Document {
   id          String     @id @default(uuid())
   link        String
+  name        String     @default("")
   courseId    String
   course      Course     @relation(fields: [courseId], references: [id])
-  verified    Boolean    @default(false)
+  verified    Boolean    @default(true)  // Leaving for a future update where they want to mark some materials as non-verified
   createdAt   DateTime   @default(now())
 }
 

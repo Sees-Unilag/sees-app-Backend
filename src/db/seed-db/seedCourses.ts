@@ -5,7 +5,7 @@ const prisma = new PrismaService();
 
 const addCourses = async () => {
   for (const course of coursesJson) {
-    prisma.course.create({
+    await prisma.course.create({
       data: course,
     });
   }
@@ -14,7 +14,7 @@ const addCourses = async () => {
 const seedCourses = async () => {
   try {
     await addCourses();
-    console.log('Successfully addeD Courses to Database');
+    console.log('Successfully added Courses to Database');
   } catch (err: any) {
     console.log('Error adding Courses to database', err);
   }

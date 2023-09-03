@@ -1,57 +1,51 @@
 import { Injectable } from '@nestjs/common';
 import { Course, Document, Prisma } from '@prisma/client';
-import { PrismaService } from 'src/database/prisma.service';
+import { PrismaService } from 'src/db';
 
 @Injectable()
 export class CourseRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getCourse(params: {
-    where: Prisma.CourseWhereUniqueInput;
-  }): Promise<Course | null> {
-    const { where } = params;
+  async getCourse(
+    where: Prisma.CourseWhereUniqueInput,
+  ): Promise<Course | null> {
     return this.prisma.course.findUnique({
       where,
+      include: { documents: true },
     });
   }
 
-  async addCourse(params: { data: Prisma.CourseCreateInput }): Promise<Course> {
-    const { data } = params;
+  async addCourse(data: Prisma.CourseCreateInput): Promise<Course> {
     return this.prisma.course.create({ data });
   }
 
-  async updateCourse(params: {
-    where: Prisma.CourseWhereUniqueInput;
-    data: Prisma.CourseCreateInput;
-  }): Promise<Course> {
-    const { where, data } = params;
+  async updateCourse(
+    where: Prisma.CourseWhereUniqueInput,
+    data: Prisma.CourseCreateInput,
+  ): Promise<Course> {
     return this.prisma.course.update({
       where,
       data,
     });
   }
 
-  async getCourses(params: {
-    where: Prisma.CourseWhereInput;
-  }): Promise<Course[]> {
-    const { where } = params;
-    return this.prisma.course.findMany({
+  async getCourses(where: Prisma.CourseWhereInput): Promise<Course[]> {
+    const courses = await this.prisma.course.findMany({
       where,
     });
+    return courses;
   }
 
-  async addDocument(params: { data: Prisma.DocumentCreateInput }) {
-    const { data } = params;
+  async addDocument(data: Prisma.DocumentCreateInput) {
     const document = await this.prisma.document.create({
       data,
     });
     return document;
   }
 
-  async verifyDocument(params: {
-    where: Prisma.DocumentWhereUniqueInput;
-  }): Promise<Document> {
-    const { where } = params;
+  async verifyDocument(
+    where: Prisma.DocumentWhereUniqueInput,
+  ): Promise<Document> {
     const document = this.prisma.document.update({
       where,
       data: { verified: true },

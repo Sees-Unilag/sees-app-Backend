@@ -1,58 +1,41 @@
 import {
-  ConflictException,
   Injectable,
   InternalServerErrorException,
-  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
-import { AdminRepository } from './admins.repository';
-import { CreateAdminDto } from './dtos/create-admin.dto';
+import { AdminRepository, ISignInResponse, signInDto } from './';
 import { Admin } from '@prisma/client';
 import { compare, hash } from 'bcryptjs';
-import { AuthCredentialsDto } from './dtos/auth-credentials.dto';
 import { JwtService } from '@nestjs/jwt';
-import ISignInResponse from './interface/signInResponse.interface';
+import { LoggerService } from 'src/common';
+import { env } from 'src/config';
+
 
 @Injectable()
 export class AdminsService {
-  private logger = new Logger('AdminService');
-
   constructor(
     private readonly repository: AdminRepository,
     private readonly jwtService: JwtService,
+    private readonly logger: LoggerService
   ) {}
 
   /**
-   * Registers an admin if the credentials are valid
-   * @param secretKey
+   * Creates an Admin on bootstrap
    * @param username
    * @param password
    * @returns the admin
    */
 
-  async signUp(createAdminDto: CreateAdminDto): Promise<Admin> {
-    const { secretKey, username, password } = createAdminDto;
-    if (secretKey !== process.env.SECRET_KEY)
-      throw new UnauthorizedException('The secret key provided is invlaid');
-
+  async createAdmin(username:string, password:string): Promise<void>{
     const hashedPassword = await hash(password, 10);
-    const data = { username: username.toLowerCase(), password: hashedPassword };
-
-    let admin: Admin;
     try {
-      admin = await this.repository.createAdmin({ data });
+      await this.repository.createAdmin({ username, password:hashedPassword});
     } catch (error) {
-      if (error.code === 'P2002') {
-        throw new ConflictException('Username already exists');
-      } else {
-        this.logger.error(error.code);
+        this.logger.error(error);
         throw new InternalServerErrorException(
           'An unexpected error occurred, try again.',
         );
-      }
-    }
-    return admin;
-  }
+  }}
 
   /**
    * Logs an admin in if the credentials are valid
@@ -62,7 +45,7 @@ export class AdminsService {
    */
 
   async signIn(
-    authCredentialsDto: AuthCredentialsDto,
+    authCredentialsDto:signInDto,
   ): Promise<ISignInResponse> {
     const { username, password } = authCredentialsDto;
 
@@ -90,7 +73,8 @@ export class AdminsService {
   private async generateToken(admin: Admin): Promise<ISignInResponse> {
     const accessToken = this.createAcessToken(admin);
     const refreshToken = this.createRefreshToken(admin);
-    const refreshTokenTime = process.env.REFRESHTOKEN_EXPIRY as unknown as number; // no of days
+    const refreshTokenTime = process.env
+      .REFRESHTOKEN_EXPIRY as unknown as number; // no of days
     const expiresAt = new Date(
       Date.now() + refreshTokenTime * 24 * 60 * 60 * 1000,
     );
@@ -106,7 +90,7 @@ export class AdminsService {
   private createAcessToken = (admin: Admin) => {
     return this.jwtService.sign(
       { id: admin.id, type: 'access' },
-      { expiresIn: process.env.ACCESSTOKEN_EXPIRY },
+      { expiresIn: env.accesstoken_expiresat },
     );
   };
 
@@ -114,7 +98,7 @@ export class AdminsService {
     return this.jwtService.sign(
       { id: admin.id, type: 'refresh' },
       {
-        expiresIn: process.env.REFRESHTOKEN_EXPIRY,
+        expiresIn: env.refreshtoken_expiresat,
       },
     );
   };

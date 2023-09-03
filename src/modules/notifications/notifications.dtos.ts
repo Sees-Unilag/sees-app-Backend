@@ -29,7 +29,7 @@ class Link {
   github: string;
 }
 
-export class NotificationInputDto {
+export class AddNotificationDto {
   @IsNotEmpty()
   @IsString()
   title: string;

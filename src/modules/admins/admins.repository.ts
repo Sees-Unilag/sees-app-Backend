@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Admin, Prisma } from '@prisma/client';
-import { PrismaService } from 'src/database/prisma.service';
+import { PrismaService } from 'src/db';
 
 @Injectable()
 export class AdminRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createAdmin(params: { data: Prisma.AdminCreateInput }): Promise<Admin> {
-    const { data } = params;
+  async createAdmin(data: Prisma.AdminCreateInput): Promise<Admin> {
     const user = this.prisma.admin.create({ data });
     return user;
   }

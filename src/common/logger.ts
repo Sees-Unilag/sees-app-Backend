@@ -1,5 +1,4 @@
 import { createLogger, transports, format, addColors, Logger } from 'winston';
-import LoggerService from './logger.interface';
 import { Injectable } from '@nestjs/common';
 const { combine, timestamp, json, colorize, printf } = format;
 
@@ -21,7 +20,7 @@ const myLevels = {
 };
 
 @Injectable()
-export class WinstonLogger implements LoggerService {
+export class LoggerService {
   private readonly logger: Logger;
 
   constructor() {
@@ -54,26 +53,28 @@ export class WinstonLogger implements LoggerService {
       ],
     });
 
-    if (process.env.NODE_ENV !== 'production') {
-      const console_format = format.combine(format.colorize(), format.simple());
-      this.logger.add(
-        new transports.Console({
-          level: 'info',
-          format: console_format,
-        }),
-      );
-      this.logger.exceptions.handle(
-        new transports.Console({ format: console_format }),
-      );
-      this.logger.rejections.handle(
-        new transports.Console({ format: console_format }),
-      );
-    }
+    const console_format = format.combine(format.colorize(), format.simple());
+    this.logger.add(
+      new transports.Console({
+        level: 'info',
+        format: console_format,
+      }),
+    );
+    this.logger.exceptions.handle(
+      new transports.Console({ format: console_format }),
+    );
+    this.logger.rejections.handle(
+      new transports.Console({ format: console_format }),
+    );
   }
 
   private level(): string {
     const env = process.env.NODE_ENV || 'development';
     return env === 'development' ? 'debug' : 'warn';
+  }
+
+  log(message: string) {
+    this.logger.info(message);
   }
 
   error(message: string): void {
@@ -82,10 +83,6 @@ export class WinstonLogger implements LoggerService {
 
   warn(message: string): void {
     this.logger.warn(message);
-  }
-
-  info(message: string): void {
-    this.logger.info(message);
   }
 
   http(message: string): void {

@@ -3,7 +3,6 @@ import { CoursesModule } from './modules/courses/';
 import { NotificationsModule } from './modules/notifications';
 import { AdminsModule } from './modules/admins';
 import { FileUploadModule } from './modules/file-upload';
-import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './common/exception_filter';
 import LoggerModule from './modules/logging/logger.module';
@@ -18,11 +17,6 @@ import { LoggerMiddleware } from './common/http';
     AdminsModule,
     NotificationsModule,
     FileUploadModule,
-    ConfigModule.forRoot({
-      isGlobal: true
-    }),
-    
-    
   ],
   providers: [
     {

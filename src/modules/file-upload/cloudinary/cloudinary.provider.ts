@@ -1,13 +1,14 @@
 import { v2 as cloudinary } from 'cloudinary';
 import { CLOUDINARY } from './constants';
-import { ConfigService } from '@nestjs/config/dist';
+import { env } from 'src/config';
 
 export const CloudinaryProvider = {
   provide: CLOUDINARY,
-  useFactory: (configService: ConfigService) => {
-    const cloudinaryConfig = configService.get('cloudinary');
-    cloudinary.config(cloudinaryConfig);
-    return cloudinary;
-  },
-  inject: [ConfigService],
+  useFactory: () => {
+    return cloudinary.config( { 
+     cloud_name: env.cloudinary_cloudname,
+     api_key: env.cloudinary_apikey,
+     api_secret: env.cloudinary_apisecret
+    })
+  }
 };

@@ -1,6 +1,5 @@
 import {
   Injectable,
-  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { AdminRepository, ISignInResponse, signInDto } from './';
@@ -20,22 +19,18 @@ export class AdminsService {
   ) {}
 
   /**
-   * Creates an Admin on bootstrap
-   * @param username
-   * @param password
-   * @returns the admin
+   * Seeds the Db with admin data from environmental variables
    */
-
-  async createAdmin(username:string, password:string): Promise<void>{
-    const hashedPassword = await hash(password, 10);
-    try {
-      await this.repository.createAdmin({ username, password:hashedPassword});
-    } catch (error) {
-        this.logger.error(error);
-        throw new InternalServerErrorException(
-          'An unexpected error occurred, try again.',
-        );
-  }}
+  async setupAdmin(): Promise<void>{
+    const username = env.admin_username;
+    const admin = await this.repository.findAdmin({username});
+    if (admin){
+      return this.logger.info("Admin with this username exist!, stopping Admin Set Up")
+    }
+    const hashedPassword = await hash(env.admin_password, 10);
+    await this.repository.createAdmin({ username:env.admin_username, password:hashedPassword});
+    this.logger.info("Successfully set up Sees Admin")
+    }
 
   /**
    * Logs an admin in if the credentials are valid
@@ -49,9 +44,7 @@ export class AdminsService {
   ): Promise<ISignInResponse> {
     const { username, password } = authCredentialsDto;
 
-    const admin = await this.repository.findAdmin({
-      where: { username: username },
-    });
+    const admin = await this.repository.findAdmin({ username })
     if (!admin) {
       throw new UnauthorizedException('Invalid Username or Password');
     }

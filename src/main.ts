@@ -6,6 +6,7 @@ import * as responseTime from "response-time"
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { env } from './config';
 import { NotFoundExceptionFilter } from './common';
+import { AdminsService } from './modules/admins';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {cors:true});
@@ -24,6 +25,7 @@ async function bootstrap() {
   await app
   .listen(env.port)
   .then(() => Logger.log(`app running on ${env.port}, SeesBackend🚀`));
+  app.get(AdminsService).setupAdmin();
 
 }
 bootstrap();

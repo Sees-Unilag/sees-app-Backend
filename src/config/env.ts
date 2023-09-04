@@ -39,6 +39,12 @@ export class Environment {
 
   @IsNotEmpty()
   refreshtoken_expiresat: string;
+
+  @IsNotEmpty()
+  admin_username:string;
+
+  @IsNotEmpty()
+  admin_password:string;
 }
 
 

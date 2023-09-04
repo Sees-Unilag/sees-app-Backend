@@ -53,6 +53,7 @@ model Document {
   id          String     @id @default(uuid())
   link        String
   courseId    String
+  name        String
   course      Course     @relation(fields: [courseId], references: [id])
   verified    Boolean    @default(true)
   createdAt   DateTime   @default(now())

@@ -1,15 +1,29 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
+import helmet from "helmet";
+import * as responseTime from "response-time"
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { env } from './config';
+import { NotFoundExceptionFilter } from './common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {cors:true});
+  app.use(helmet())  
+  app.use(responseTime())
+  app.setGlobalPrefix('/v1');
+  app.useGlobalFilters(new NotFoundExceptionFilter())
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
       transform: true,
+      stopAtFirstError: false,
+      skipMissingProperties: false,
     }),
   );
-  await app.listen(3000);
+  await app
+  .listen(env.port)
+  .then(() => Logger.log(`app running on ${env.port}, SeesBackend🚀`));
+
 }
 bootstrap();

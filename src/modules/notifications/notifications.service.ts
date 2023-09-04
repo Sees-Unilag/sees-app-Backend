@@ -1,17 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { NotificationRepository } from './notifications.repository';
+import { NotificationRepository, AddNotificationDto } from './';
 import { Notification } from '@prisma/client';
-import { NotificationInputDto } from './dtos/add-notifications.dto';
-import { PrismaService } from 'src/database/prisma.service';
+
 
 @Injectable()
 export class NotificationsService {
-  private perPage: number = +process.env.PER_PAGE;
-
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly repository: NotificationRepository,
-  ) {}
+  constructor(private readonly repository: NotificationRepository) {}
 
   /**
    * Takes in the notification Id and returns the notification with given id if any
@@ -34,9 +28,10 @@ export class NotificationsService {
    * @param pageNumber
    */
   async getNotifications(pageNumber: number): Promise<Notification[]> {
+    const perPage = +process.env.PER_PAGE;
     const page = pageNumber > 0 ? pageNumber : 1;
-    const skip = (page - 1) * this.perPage;
-    const take = this.perPage;
+    const skip = (page - 1) * perPage;
+    const take = perPage;
     const notifications = await this.repository.getNotifications({
       skip,
       take,
@@ -52,7 +47,7 @@ export class NotificationsService {
    * @param links
    */
   async addNotifications(
-    addNotificationDto: NotificationInputDto,
+    addNotificationDto: AddNotificationDto,
   ): Promise<Notification> {
     const { title, text, imageUrl, links } = addNotificationDto;
     const data = { title, text, imageUrl, links: { create: links } };
@@ -68,7 +63,7 @@ export class NotificationsService {
    * @param links
    */
   async updateNotification(
-    updateNotificationDto: NotificationInputDto,
+    updateNotificationDto: AddNotificationDto,
     id: string,
   ): Promise<Notification> {
     const { title, text, imageUrl, links } = updateNotificationDto;

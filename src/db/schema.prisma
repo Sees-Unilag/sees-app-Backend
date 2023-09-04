@@ -54,7 +54,7 @@ model Document {
   link        String
   courseId    String
   course      Course     @relation(fields: [courseId], references: [id])
-  verified    Boolean    @default(false)
+  verified    Boolean    @default(true)
   createdAt   DateTime   @default(now())
 }
 

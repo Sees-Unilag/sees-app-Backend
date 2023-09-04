@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Param,
   Post,
   Patch,
   Delete,
@@ -9,58 +8,51 @@ import {
   Query,
   ParseIntPipe,
   UseGuards,
+  Inject,
 } from '@nestjs/common';
-import { NotificationsService } from './notifications.service';
-import { NotificationInputDto } from './dtos/add-notifications.dto';
-import { AdminGuard } from '../admins/admin.guard';
+import { NotificationsService, AddNotificationDto } from './';
+import { AdminGuard } from '../admins';
+import { HttpController, UUIDParam } from 'src/common';
 
 @Controller('notifications')
-export class NotificationsController {
-  constructor(private readonly service: NotificationsService) {}
+export class NotificationsController extends HttpController{
+  @Inject() private readonly service: NotificationsService;
 
   @Get()
   async getNotifications(
     @Query('pageNumber', ParseIntPipe) pageNumber: number,
   ) {
     const notifications = await this.service.getNotifications(pageNumber);
-    return { success: true, notifications };
+    return this.send(notifications);
   }
 
   @Get(':id')
-  async getNotification(@Param('id') id: string) {
+  async getNotification(@UUIDParam('id') id: string) {
     const notification = await this.service.getNotification(id);
-    return { success: true, notification };
+    return this.send(notification);
   }
 
   @UseGuards(AdminGuard)
   @Post()
-  async addNotifications(@Body() addNotificationDto: NotificationInputDto) {
-    const notification = await this.service.addNotifications(
-      addNotificationDto,
-    );
-    return { success: true, notification };
+  async addNotifications(@Body() body :AddNotificationDto) {
+    const notification = await this.service.addNotifications(body);
+    return this.send(notification)
   }
 
   @UseGuards(AdminGuard)
   @Patch(':id')
   async updateNotification(
-    @Param('id') id: string,
-    @Body() updateNotificationDto: NotificationInputDto,
+    @UUIDParam('id') id: string,
+    @Body() body: AddNotificationDto
   ) {
-    const notification = await this.service.updateNotification(
-      updateNotificationDto,
-      id,
-    );
-    return { success: true, notification };
+    const notification = await this.service.updateNotification(body, id);
+    return this.send(notification)
   }
 
   @UseGuards(AdminGuard)
   @Delete(':id')
-  async deleteNotification(@Param('id') id: string) {
+  async deleteNotification(@UUIDParam('id') id: string) {
     await this.service.deleteNotification(id);
-    return {
-      success: true,
-      message: 'Notification has been deleted successfully',
-    };
+    return this.send();
   }
 }

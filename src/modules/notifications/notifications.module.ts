@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
-import { NotificationsController } from './notifications.controller';
-import { NotificationsService } from './notifications.service';
-import { PrismaModule } from 'src/database/prisma.module';
-import { NotificationRepository } from './notifications.repository';
+import { NotificationsController, NotificationsService, NotificationRepository } from './';
 import { JwtService } from '@nestjs/jwt';
+import { AdminsModule } from '../admins';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [AdminsModule],
   controllers: [NotificationsController],
   providers: [NotificationRepository, NotificationsService, JwtService],
 })

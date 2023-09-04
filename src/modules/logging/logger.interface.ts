@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export default abstract class LoggerService {
+export abstract class LoggerService {
   abstract warn(_message: string): void;
 
   abstract error(_message: string): void;

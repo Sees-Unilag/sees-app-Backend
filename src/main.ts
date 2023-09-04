@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import helmet from "helmet";
-import responseTime from "response-time"
+import * as responseTime from "response-time"
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { env } from './config';
 import { NotFoundExceptionFilter } from './common';

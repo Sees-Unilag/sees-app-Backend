@@ -19,8 +19,7 @@ import { LoggerMiddleware } from './common/http';
     NotificationsModule,
     FileUploadModule,
     ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: ['.env', '.env.development'],
+      isGlobal: true
     }),
     
     

@@ -2,59 +2,41 @@ import {
   Controller,
   Get,
   Body,
-  Param,
-  Patch,
-  UseGuards,
   Post,
   UseInterceptors,
   UploadedFile,
-  ParseFilePipe,
-  MaxFileSizeValidator,
-  FileTypeValidator,
+  Inject
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { GetCoursesDto } from './dtos/get-courses.dto';
-import { CoursesService } from './courses.service';
-import { AdminGuard } from '../admins/admin.guard';
+import { CoursesService, GetCoursesDto } from './';
+import {FileValidationPipe} from '../file-upload/';
+import { HttpController, UUIDParam } from 'src/common';
 
 @Controller('courses')
-export class CoursesController {
-  constructor(private readonly service: CoursesService) {}
+export class CoursesController extends HttpController{
+  @Inject()private readonly service: CoursesService;
 
   @Get()
-  async getCourses(@Body() getCoursesDto: GetCoursesDto) {
-    const courses = await this.service.getCourses(getCoursesDto);
-    return { success: true, courses };
+  async getCourses(@Body() body: GetCoursesDto) {
+    const courses = await this.service.getCourses(body);
+    return this.send(courses);
   }
 
   @Get(':id')
-  async getCourse(@Param('id') id: string) {
+  async getCourse(@UUIDParam('id') id: string) {
     const course = await this.service.getCourse(id);
-    return { success: true, course };
+    return this.send(course)
   }
 
   @Post(':id/documents')
   @UseInterceptors(FileInterceptor('file'))
   async addDocument(
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 1000 * 1024 * 1024 }),
-          new FileTypeValidator({ fileType: 'application/pdf' }),
-        ],
-      }),
-    )
+    @UploadedFile(new FileValidationPipe())
     file: Express.Multer.File,
-    @Param('id') id: string,
+    @UUIDParam('id') id: string,
   ) {
-    await this.service.addDocument(file, id);
-    return { success: true, message: 'Document Successfully Added' };
+    await this.service.addDocument(file, file.originalname, id);
+    return this.message('Document Successfully Added')
   }
 
-  @UseGuards(AdminGuard)
-  @Patch('documents/:id')
-  async verifyDocument(@Param('id') id: string) {
-    const document = await this.service.verifyDocument(id);
-    return { sucess: true, message: 'Verification Successful', document };
-  }
 }

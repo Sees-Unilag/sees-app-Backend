@@ -1,32 +1,40 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import { CoursesModule } from './modules/courses/courses.module';
-import { NotificationsModule } from './modules/notifications/notifications.module';
-import { AdminsModule } from './modules/admins/admins.module';
-import { FileUploadModule } from './modules/file-upload/file_upload.module';
+import { CoursesModule } from './modules/courses/';
+import { NotificationsModule } from './modules/notifications';
+import { AdminsModule } from './modules/admins';
+import { FileUploadModule } from './modules/file-upload';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
-//import { AllExceptionsFilter } from './common/exception_filter';
+import { AllExceptionsFilter } from './common/exception_filter';
 import LoggerModule from './modules/logging/logger.module';
-//import { LoggerMiddleware } from './common/http';
+import { PrismaModule } from './db';
+import { LoggerMiddleware } from './common/http';
 
 @Module({
   imports: [
+    LoggerModule,
     CoursesModule,
+    PrismaModule,
+    AdminsModule,
     NotificationsModule,
     FileUploadModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', '.env.development'],
     }),
-    AdminsModule,
-    LoggerModule,
+    
+    
   ],
-  // providers: [
-  //   {
-  //     provide: APP_FILTER,
-  //     useClass: AllExceptionsFilter,
-  //   },
-  // ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: AllExceptionsFilter,
+    },
+  ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
 

@@ -30,8 +30,7 @@ export class LoggerMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction): void {
     const { ip, method, originalUrl } = req;
-    const userAgent = req.get('user-agent') || '';
-
+    
     ['send', 'json'].forEach((m) => {
       const method = res[m];
       res[m] = function (body?: any) {
@@ -57,7 +56,6 @@ export class LoggerMiddleware implements NestMiddleware {
           method,
           'original-url': originalUrl,
           ip,
-          'user-agent': userAgent,
           'content-length': contentLength,
           'request-body': req.body,
           response: res.locals.body,

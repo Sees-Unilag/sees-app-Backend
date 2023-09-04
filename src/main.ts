@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import helmet from "helmet";
+import responseTime from "response-time"
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { env } from './config';
 import { NotFoundExceptionFilter } from './common';
@@ -9,6 +10,7 @@ import { NotFoundExceptionFilter } from './common';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {cors:true});
   app.use(helmet())  
+  app.use(responseTime())
   app.setGlobalPrefix('/v1');
   app.useGlobalFilters(new NotFoundExceptionFilter())
   app.useGlobalPipes(

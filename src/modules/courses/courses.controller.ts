@@ -4,10 +4,10 @@ import {
   Body,
   Post,
   UseInterceptors,
-  UploadedFile,
+  UploadedFiles,
   Inject
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { CoursesService, GetCoursesDto } from './';
 import {FileValidationPipe} from '../file-upload/';
 import { HttpController, UUIDParam } from 'src/common';
@@ -29,13 +29,13 @@ export class CoursesController extends HttpController{
   }
 
   @Post(':id/documents')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FilesInterceptor('files'))
   async addDocument(
-    @UploadedFile(new FileValidationPipe())
-    file: Express.Multer.File,
+    @UploadedFiles(new FileValidationPipe())
+    files: Express.Multer.File[],
     @UUIDParam('id') id: string,
   ) {
-    await this.service.addDocument(file, file.originalname, id);
+    await this.service.addDocuments(files, id);
     return this.message('Document Successfully Added')
   }
 

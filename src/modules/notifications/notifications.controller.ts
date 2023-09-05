@@ -9,10 +9,14 @@ import {
   ParseIntPipe,
   UseGuards,
   Inject,
+  UseInterceptors,
+  UploadedFile
 } from '@nestjs/common';
-import { NotificationsService, AddNotificationDto } from './';
+import { NotificationsService, AddNotificationDto, WeekEntreprenuerDto } from './';
 import { AdminGuard } from '../admins';
 import { HttpController, UUIDParam } from 'src/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FileValidationPipe } from '../file-upload';
 
 @Controller('notifications')
 export class NotificationsController extends HttpController{
@@ -30,6 +34,13 @@ export class NotificationsController extends HttpController{
   async getNotification(@UUIDParam('id') id: string) {
     const notification = await this.service.getNotification(id);
     return this.send(notification);
+  }
+
+  @Post('entrepreneur')
+  @UseInterceptors(FileInterceptor('file'))
+  async addWeekEntreprenuer(@UploadedFile(new FileValidationPipe())
+  file: Express.Multer.File,@Body() body: WeekEntreprenuerDto){
+    console.log(file)
   }
 
   @UseGuards(AdminGuard)

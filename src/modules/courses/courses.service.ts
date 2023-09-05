@@ -34,21 +34,20 @@ export class CoursesService {
   }
 
   /**
-   * Uploads a file to the cloud storage service
-   * @param File 
-   * @param filename 
+   * Uploads file(s) to the cloud storage service
+   * @param files
    * @param courseId 
    */
-  async addDocument(
-    File: Express.Multer.File,
-    filename: string,
+  async addDocuments(
+    files: Express.Multer.File[],
     courseId: string,
   ) {
-    const link = await this.fileUploadService.uploadFile(File);
-    await this.repository.addDocument({
-      name: filename,
-      link,
-      course: { connect: { id: courseId } },
-    });
-    this.logger.info(`New Document Added for CourseId:${courseId}, filename:${filename}`)
-  }}
+    for(const file of files) {
+      const link = await this.fileUploadService.uploadFile(file);
+      await this.repository.addDocument({
+        name: file.originalname.split('.')[0],
+        link,
+        course: { connect: { id: courseId } },
+      });
+      this.logger.info(`New Document Added for CourseId:${courseId}, filename:${file.filename}`)
+  }}}

@@ -47,3 +47,13 @@ export class AddNotificationDto {
   @IsObject()
   links: Link;
 }
+
+export class WeekEntreprenuerDto{
+  @IsNotEmpty()
+  @IsString()
+  brandName:string
+
+  @IsNotEmpty()
+  @IsString()
+  brandDetails:string
+}

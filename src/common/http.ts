@@ -50,7 +50,7 @@ export class LoggerMiddleware implements NestMiddleware {
         req.body = this.removeSensitiveFields(req.body);
         res.locals.body = {};
       }
-      this.logger.http(
+      this.logger.info(
         JSON.stringify({
           'status-code': statusCode,
           method,

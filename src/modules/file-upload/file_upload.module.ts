@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { CloudinaryService } from './cloudinary/cloudinary.service';
 import { CloudinaryProvider } from './cloudinary/cloudinary.provider';
 import {FileUploadService} from './file_upload.interface';
-import { FileValidationPipe } from './file_upload.pipe';
+import { FileValidationPipe, ImageValidationPipe } from './file_upload.pipe';
 
 @Module({
   providers: [
@@ -10,8 +10,8 @@ import { FileValidationPipe } from './file_upload.pipe';
       provide: FileUploadService,
       useClass: CloudinaryService,
     },
-    CloudinaryProvider, FileValidationPipe
+    CloudinaryProvider, FileValidationPipe, ImageValidationPipe
   ],
-  exports: [FileUploadService, CloudinaryProvider, FileValidationPipe],
+  exports: [FileUploadService, ImageValidationPipe, CloudinaryProvider, FileValidationPipe],
 })
 export class FileUploadModule {}

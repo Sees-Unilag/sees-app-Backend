@@ -12,11 +12,11 @@ import {
   UseInterceptors,
   UploadedFile
 } from '@nestjs/common';
-import { NotificationsService, AddNotificationDto, WeekEntreprenuerDto } from './';
+import { NotificationsService, AddNotificationDto } from './';
 import { AdminGuard } from '../admins';
 import { HttpController, UUIDParam } from 'src/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { FileValidationPipe } from '../file-upload';
+import { ImageValidationPipe } from '../file-upload';
 
 @Controller('notifications')
 export class NotificationsController extends HttpController{
@@ -24,7 +24,7 @@ export class NotificationsController extends HttpController{
 
   @Get()
   async getNotifications(
-    @Query('pageNumber', ParseIntPipe) pageNumber: number,
+    @Query('page', ParseIntPipe) pageNumber: number,
   ) {
     const notifications = await this.service.getNotifications(pageNumber);
     return this.send(notifications);
@@ -36,17 +36,13 @@ export class NotificationsController extends HttpController{
     return this.send(notification);
   }
 
-  @Post('entrepreneur')
-  @UseInterceptors(FileInterceptor('file'))
-  async addWeekEntreprenuer(@UploadedFile(new FileValidationPipe())
-  file: Express.Multer.File,@Body() body: WeekEntreprenuerDto){
-    console.log(file)
-  }
-
   @UseGuards(AdminGuard)
   @Post()
-  async addNotifications(@Body() body :AddNotificationDto) {
-    const notification = await this.service.addNotifications(body);
+  @UseInterceptors(FileInterceptor('image'))
+  async addNotifications(
+  @Body() body :AddNotificationDto,
+  @UploadedFile(ImageValidationPipe) image: Express.Multer.File) {
+    const notification = await this.service.addNotifications(body, image);
     return this.send(notification)
   }
 

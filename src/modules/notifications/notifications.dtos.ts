@@ -38,22 +38,9 @@ export class AddNotificationDto {
   @IsString()
   text: string;
 
-  @IsNotEmpty()
-  @IsString()
-  imageUrl: string;
-
   @ValidateNested({ each: true })
   @Type(() => Link)
   @IsObject()
+  @IsOptional()
   links: Link;
-}
-
-export class WeekEntreprenuerDto{
-  @IsNotEmpty()
-  @IsString()
-  brandName:string
-
-  @IsNotEmpty()
-  @IsString()
-  brandDetails:string
 }

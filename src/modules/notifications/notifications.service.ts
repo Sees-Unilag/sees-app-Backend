@@ -1,11 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { NotificationRepository, AddNotificationDto } from './';
 import { Notification } from '@prisma/client';
+import { FileUploadService } from '../file-upload';
 
 
 @Injectable()
 export class NotificationsService {
-  constructor(private readonly repository: NotificationRepository) {}
+  constructor(private readonly repository: NotificationRepository,
+    private readonly fileUploadService: FileUploadService) {}
 
   /**
    * Takes in the notification Id and returns the notification with given id if any
@@ -47,9 +49,10 @@ export class NotificationsService {
    * @param links
    */
   async addNotifications(
-    addNotificationDto: AddNotificationDto,
+    addNotificationDto: AddNotificationDto, image:Express.Multer.File
   ): Promise<Notification> {
-    const { title, text, imageUrl, links } = addNotificationDto;
+    const imageUrl = await this.fileUploadService.uploadFile(image);
+    const { title, text, links } = addNotificationDto;
     const data = { title, text, imageUrl, links: { create: links } };
     const notification = await this.repository.addNotification({ data });
     return notification;
@@ -66,7 +69,7 @@ export class NotificationsService {
     updateNotificationDto: AddNotificationDto,
     id: string,
   ): Promise<Notification> {
-    const { title, text, imageUrl, links } = updateNotificationDto;
+    const { title, text, links } = updateNotificationDto;
 
     /**
      *throws an error if the notification is not found
@@ -76,7 +79,6 @@ export class NotificationsService {
     const data = {
       title,
       text,
-      imageUrl,
       links: {
         connectOrCreate: {
           // if perchance the links for this notification is deleted

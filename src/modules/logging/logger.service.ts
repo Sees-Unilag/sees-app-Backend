@@ -1,5 +1,5 @@
 import { createLogger, transports, format, addColors, Logger } from 'winston';
-import {LoggerService} from './';
+import { LoggerService } from './';
 import { Injectable } from '@nestjs/common';
 const { combine, timestamp, json, colorize, printf } = format;
 
@@ -68,7 +68,6 @@ export class WinstonLogger implements LoggerService {
       new transports.Console({ format: console_format }),
     );
   }
-  
 
   private level(): string {
     const env = process.env.NODE_ENV || 'development';

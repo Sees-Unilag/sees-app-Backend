@@ -23,16 +23,16 @@ export class Environment {
   page_size: number;
 
   @IsNotEmpty()
-  cloudinary_apisecret:string;
+  cloudinary_apisecret: string;
 
   @IsNotEmpty()
-  cloudinary_apikey:string;
-   
+  cloudinary_apikey: string;
+
   @IsNotEmpty()
-  cloudinary_cloudname:string;
-   
+  cloudinary_cloudname: string;
+
   @IsNotEmpty()
-  maxfile_size:number;
+  maxfile_size: number;
 
   @IsNotEmpty()
   accesstoken_expiresat: string;
@@ -41,12 +41,11 @@ export class Environment {
   refreshtoken_expiresat: string;
 
   @IsNotEmpty()
-  admin_username:string;
+  admin_username: string;
 
   @IsNotEmpty()
-  admin_password:string;
+  admin_password: string;
 }
-
 
 config();
 export const env = validate<Environment>(Environment, process.env);

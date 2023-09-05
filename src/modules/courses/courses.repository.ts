@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Course, Document, Prisma } from '@prisma/client';
+import { Course, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/db';
 
 @Injectable()
@@ -42,5 +42,4 @@ export class CourseRepository {
     });
     return document;
   }
-
 }

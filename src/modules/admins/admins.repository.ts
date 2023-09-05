@@ -11,7 +11,7 @@ export class AdminRepository {
     return user;
   }
 
-  async findAdmin( where: Prisma.AdminWhereUniqueInput): Promise<Admin | null> {
+  async findAdmin(where: Prisma.AdminWhereUniqueInput): Promise<Admin | null> {
     const admin = this.prisma.admin.findUnique({ where });
     return admin;
   }

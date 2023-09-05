@@ -10,7 +10,7 @@ export class CoursesService {
   constructor(
     private readonly repository: CourseRepository,
     private readonly fileUploadService: FileUploadService,
-    private readonly logger:LoggerService
+    private readonly logger: LoggerService,
   ) {}
 
   /**
@@ -36,18 +36,19 @@ export class CoursesService {
   /**
    * Uploads file(s) to the cloud storage service
    * @param files
-   * @param courseId 
+   * @param courseId
    */
-  async addDocuments(
-    files: Express.Multer.File[],
-    courseId: string,
-  ) {
-    for(const file of files) {
+  async addDocuments(files: Express.Multer.File[], courseId: string) {
+    for (const file of files) {
       const link = await this.fileUploadService.uploadFile(file);
       await this.repository.addDocument({
         name: file.originalname.split('.')[0],
         link,
         course: { connect: { id: courseId } },
       });
-      this.logger.info(`New Document Added for CourseId:${courseId}, filename:${file.filename}`)
-  }}}
+      this.logger.info(
+        `New Document Added for CourseId:${courseId}, filename:${file.filename}`,
+      );
+    }
+  }
+}

@@ -15,7 +15,7 @@ export class AdminGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
-    private readonly logger: LoggerService
+    private readonly logger: LoggerService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -37,7 +37,7 @@ export class AdminGuard implements CanActivate {
       request['user'] = payload;
       return true;
     } catch {
-      this.logger.error('Invalid or Expired Token')
+      this.logger.error('Invalid or Expired Token');
       throw new UnauthorizedException('Invalid or Expired Token');
     }
   }

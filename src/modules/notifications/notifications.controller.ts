@@ -10,7 +10,7 @@ import {
   UseGuards,
   Inject,
   UseInterceptors,
-  UploadedFile
+  UploadedFile,
 } from '@nestjs/common';
 import { NotificationsService, AddNotificationDto } from './';
 import { AdminGuard } from '../admins';
@@ -19,13 +19,11 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageValidationPipe } from '../file-upload';
 
 @Controller('notifications')
-export class NotificationsController extends HttpController{
+export class NotificationsController extends HttpController {
   @Inject() private readonly service: NotificationsService;
 
   @Get()
-  async getNotifications(
-    @Query('page', ParseIntPipe) pageNumber: number,
-  ) {
+  async getNotifications(@Query('page', ParseIntPipe) pageNumber: number) {
     const notifications = await this.service.getNotifications(pageNumber);
     return this.send(notifications);
   }
@@ -40,20 +38,21 @@ export class NotificationsController extends HttpController{
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   async addNotifications(
-  @Body() body :AddNotificationDto,
-  @UploadedFile(ImageValidationPipe) image: Express.Multer.File) {
+    @Body() body: AddNotificationDto,
+    @UploadedFile(ImageValidationPipe) image: Express.Multer.File,
+  ) {
     const notification = await this.service.addNotifications(body, image);
-    return this.send(notification)
+    return this.send(notification);
   }
 
   @UseGuards(AdminGuard)
   @Patch(':id')
   async updateNotification(
     @UUIDParam('id') id: string,
-    @Body() body: AddNotificationDto
+    @Body() body: AddNotificationDto,
   ) {
     const notification = await this.service.updateNotification(body, id);
-    return this.send(notification)
+    return this.send(notification);
   }
 
   @UseGuards(AdminGuard)

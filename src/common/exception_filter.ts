@@ -5,14 +5,14 @@ import {
   HttpException,
   HttpStatus,
   NotFoundException,
-  Inject
+  Inject,
 } from '@nestjs/common';
 import { LoggerService } from 'src/modules/logging';
 import { Request, Response } from 'express';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
-  @Inject() private readonly logger: LoggerService
+  @Inject() private readonly logger: LoggerService;
 
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -42,6 +42,8 @@ export class NotFoundExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
 
-    response.status(HttpStatus.NOT_FOUND).send("This route doesn't exist in SEES!😃"); 
+    response
+      .status(HttpStatus.NOT_FOUND)
+      .send("This route doesn't exist in SEES!😃");
   }
 }

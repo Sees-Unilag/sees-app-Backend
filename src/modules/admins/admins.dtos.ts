@@ -6,10 +6,9 @@ export class signInDto {
 
   @IsString()
   password: string;
-  
 }
 
 export interface ISignInResponse {
-  refreshToken:string
-  accessToken:string
+  refreshToken: string;
+  accessToken: string;
 }

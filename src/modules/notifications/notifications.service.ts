@@ -3,11 +3,12 @@ import { NotificationRepository, AddNotificationDto } from './';
 import { Notification } from '@prisma/client';
 import { FileUploadService } from '../file-upload';
 
-
 @Injectable()
 export class NotificationsService {
-  constructor(private readonly repository: NotificationRepository,
-    private readonly fileUploadService: FileUploadService) {}
+  constructor(
+    private readonly repository: NotificationRepository,
+    private readonly fileUploadService: FileUploadService,
+  ) {}
 
   /**
    * Takes in the notification Id and returns the notification with given id if any
@@ -49,7 +50,8 @@ export class NotificationsService {
    * @param links
    */
   async addNotifications(
-    addNotificationDto: AddNotificationDto, image:Express.Multer.File
+    addNotificationDto: AddNotificationDto,
+    image: Express.Multer.File,
   ): Promise<Notification> {
     const imageUrl = await this.fileUploadService.uploadFile(image);
     const { title, text, links } = addNotificationDto;

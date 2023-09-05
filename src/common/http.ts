@@ -1,7 +1,14 @@
-import { Injectable, NestMiddleware, createParamDecorator, ExecutionContext, BadRequestException, Inject } from "@nestjs/common";
+import {
+  Injectable,
+  NestMiddleware,
+  createParamDecorator,
+  ExecutionContext,
+  BadRequestException,
+  Inject,
+} from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { LoggerService } from "src/modules/logging";
-import { isUUID } from "class-validator";
+import { LoggerService } from 'src/modules/logging';
+import { isUUID } from 'class-validator';
 
 /**
  * A generic controller to make the controllers response uniform accross the codebase
@@ -16,21 +23,19 @@ export class HttpController {
   }
 }
 
-
 const sensitiveDetails = ['token', 'code', 'password'];
 
-
 /**
- * A Logger Provider for logging every http request to the server. It also includes to filter sensitive details 
+ * A Logger Provider for logging every http request to the server. It also includes to filter sensitive details
  * sent by the client
  */
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-  @Inject() private readonly logger:LoggerService;
+  @Inject() private readonly logger: LoggerService;
 
   use(req: Request, res: Response, next: NextFunction): void {
     const { ip, method, originalUrl } = req;
-    
+
     ['send', 'json'].forEach((m) => {
       const method = res[m];
       res[m] = function (body?: any) {
@@ -77,7 +82,6 @@ export class LoggerMiddleware implements NestMiddleware {
     return data;
   }
 }
-
 
 /**
  * A custom decorator to accept parameters of only the UUID type

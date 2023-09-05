@@ -1,5 +1,9 @@
 import { Module } from '@nestjs/common';
-import { NotificationsController, NotificationsService, NotificationRepository } from './';
+import {
+  NotificationsController,
+  NotificationsService,
+  NotificationRepository,
+} from './';
 import { JwtService } from '@nestjs/jwt';
 import { AdminsModule } from '../admins';
 import { FileUploadModule } from '../file-upload';

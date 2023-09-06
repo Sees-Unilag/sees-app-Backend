@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { NotificationRepository, AddNotificationDto } from './';
 import { Notification } from '@prisma/client';
 import { FileUploadService } from '../file-upload';

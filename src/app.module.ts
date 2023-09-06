@@ -1,5 +1,5 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import { CoursesModule } from './modules/courses/';
+import { CoursesModule } from './modules/courses';
 import { NotificationsModule } from './modules/notifications';
 import { AdminsModule } from './modules/admins';
 import { FileUploadModule } from './modules/file-upload';

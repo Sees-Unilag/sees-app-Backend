@@ -135,6 +135,7 @@ export class NotificationsService {
       (examDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24);
     return daysDifference >= 0 ? Math.round(daysDifference) : 0;
   }
+  
   /**
    * verifies on start up that the date.json exist and that it has a field "examDate"
    */
@@ -158,8 +159,8 @@ export class NotificationsService {
     return JSON.parse(configFileContents);
   }
 
-  private writeConfigFile(config: any): void {
+  private writeConfigFile(config: Record<'examDate', string>): void {
     const file = path.join(__dirname, '..', '..', '..', 'date.json');
-    fs.writeFileSync(file, JSON.stringify(config, null, 2), 'utf8');
+    fs.writeFileSync(file, JSON.stringify(config), 'utf8');
   }
 }

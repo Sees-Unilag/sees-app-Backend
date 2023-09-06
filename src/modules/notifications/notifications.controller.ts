@@ -33,7 +33,7 @@ export class NotificationsController extends HttpController {
   async getNotification(@UUIDParam('id') id: string) {
     const notification = await this.service.getNotification(id);
     const daystoExam = this.service.getDaystoExam();
-    return this.send({notification, daystoExam});
+    return this.send({ notification, daystoExam });
   }
 
   //@UseGuards(AdminGuard)
@@ -66,7 +66,7 @@ export class NotificationsController extends HttpController {
 
   //@UseGuards(AdminGuard)
   @Put('exam-date')
-  async updateExamDate(@Query() query: ExamDateDto){
+  async updateExamDate(@Query() query: ExamDateDto) {
     this.service.updateExamDate(query.date);
     return this.send();
   }

@@ -7,7 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { AdminsModule } from '../admins';
 import { FileUploadModule } from '../file-upload';
-import {LoggerModule} from '../logging';
+import { LoggerModule } from '../logging';
 
 @Module({
   imports: [AdminsModule, FileUploadModule, LoggerModule],

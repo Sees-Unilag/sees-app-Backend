@@ -29,6 +29,6 @@ async function bootstrap() {
     .listen(env.port)
     .then(() => Logger.log(`app running on ${env.port}, SeesBackend🚀`));
   app.get(AdminsService).setupAdmin();
-  app.get(NotificationsService).verifyDateJson()
+  app.get(NotificationsService).verifyDateJson();
 }
 bootstrap();

@@ -45,9 +45,9 @@ export class Environment {
 
   @IsNotEmpty()
   admin_password: string;
-  
+
   @IsNotEmpty()
-  exam_date: string
+  exam_date: string;
 }
 
 config();

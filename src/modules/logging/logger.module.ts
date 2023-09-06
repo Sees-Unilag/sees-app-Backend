@@ -7,4 +7,4 @@ import { WinstonLogger } from './logger.service';
   providers: [{ provide: LoggerService, useClass: WinstonLogger }],
   exports: [LoggerService],
 })
-export default class LoggerModule {}
+export class LoggerModule {}

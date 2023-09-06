@@ -11,8 +11,9 @@ import {
   Inject,
   UseInterceptors,
   UploadedFile,
+  Put,
 } from '@nestjs/common';
-import { NotificationsService, AddNotificationDto } from './';
+import { NotificationsService, AddNotificationDto, ExamDateDto } from './';
 import { AdminGuard } from '../admins';
 import { HttpController, UUIDParam } from 'src/common';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -31,10 +32,11 @@ export class NotificationsController extends HttpController {
   @Get(':id')
   async getNotification(@UUIDParam('id') id: string) {
     const notification = await this.service.getNotification(id);
-    return this.send(notification);
+    const daystoExam = this.service.getDaystoExam();
+    return this.send({notification, daystoExam});
   }
 
-  @UseGuards(AdminGuard)
+  //@UseGuards(AdminGuard)
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   async addNotifications(
@@ -59,6 +61,13 @@ export class NotificationsController extends HttpController {
   @Delete(':id')
   async deleteNotification(@UUIDParam('id') id: string) {
     await this.service.deleteNotification(id);
+    return this.send();
+  }
+
+  //@UseGuards(AdminGuard)
+  @Put('exam-date')
+  async updateExamDate(@Query() query: ExamDateDto){
+    this.service.updateExamDate(query.date);
     return this.send();
   }
 }

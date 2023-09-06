@@ -1,13 +1,18 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { NotificationRepository, AddNotificationDto } from './';
 import { Notification } from '@prisma/client';
 import { FileUploadService } from '../file-upload';
+import * as fs from "fs"
+import * as path from "path"
+import { env } from 'src/config';
+import { LoggerService } from '../logging';
 
 @Injectable()
 export class NotificationsService {
   constructor(
     private readonly repository: NotificationRepository,
     private readonly fileUploadService: FileUploadService,
+    private readonly logger: LoggerService
   ) {}
 
   /**
@@ -31,10 +36,9 @@ export class NotificationsService {
    * @param pageNumber
    */
   async getNotifications(pageNumber: number): Promise<Notification[]> {
-    const perPage = +process.env.PER_PAGE;
     const page = pageNumber > 0 ? pageNumber : 1;
-    const skip = (page - 1) * perPage;
-    const take = perPage;
+    const skip = (page - 1) * env.page_size;;
+    const take = env.page_size;;
     const notifications = await this.repository.getNotifications({
       skip,
       take,
@@ -108,5 +112,53 @@ export class NotificationsService {
     if (found) {
       await this.repository.deleteNotification({ where: { id } });
     }
+  }
+
+  /**
+   * update the exam date in the date.json file
+   */
+  updateExamDate(date:string):void{
+    const config = this.readConfigFile()
+    config.examDate = date;
+    this.writeConfigFile(config);
+  }
+
+  /**
+   * Returns the days difference between the current date and the exam date
+   * @returns days to Exam
+   */
+  getDaystoExam():number{
+    const config = this.readConfigFile();
+    const examDate = new Date(config.examDate);
+    const currentDate = new Date();
+    const daysDifference = (examDate.getTime() - currentDate.getTime())/(1000 * 60 * 60 * 24) 
+    return daysDifference >= 0 ? Math.round(daysDifference): 0;
+  }
+  /**
+   * verifies on start up that the date.json exist and that it has a field "examDate"
+   */
+  verifyDateJson(){
+    try {
+      const dateFile = this.readConfigFile()
+      if(!dateFile.examDate){
+          this.logger.error('Bootstrap Error,  Add "examDate":"" to date.json');
+          process.exit(1);
+        }
+      }catch(err:any){
+        this.logger.error(`Bootstrap Error,
+        Create a date.json file in the root folder and add "examDate" as a field`);
+          process.exit(1)
+      }
+  }
+
+  private readConfigFile(): Record<"examDate", string>{
+    const file = path.join(__dirname, '..', '..', '..', 'date.json')
+    const configFileContents = fs.readFileSync(file, 'utf8');
+    return JSON.parse(configFileContents);
+  }
+
+  private writeConfigFile(config: any): void {
+    const file = path.join(__dirname, '..', '..', '..', 'date.json')
+    fs.writeFileSync(file, JSON.stringify(config, null, 2), 'utf8');
   }
 }

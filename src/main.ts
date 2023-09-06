@@ -7,6 +7,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { env } from './config';
 import { NotFoundExceptionFilter } from './common';
 import { AdminsService } from './modules/admins';
+import { NotificationsService } from './modules/notifications';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -28,5 +29,6 @@ async function bootstrap() {
     .listen(env.port)
     .then(() => Logger.log(`app running on ${env.port}, SeesBackend🚀`));
   app.get(AdminsService).setupAdmin();
+  app.get(NotificationsService).verifyDateJson()
 }
 bootstrap();

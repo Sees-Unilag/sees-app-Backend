@@ -5,7 +5,7 @@ import { AdminsModule } from './modules/admins';
 import { FileUploadModule } from './modules/file-upload';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './common/exception_filter';
-import LoggerModule from './modules/logging/logger.module';
+import { LoggerModule } from './modules/logging';
 import { PrismaModule } from './db';
 import { LoggerMiddleware } from './common/http';
 

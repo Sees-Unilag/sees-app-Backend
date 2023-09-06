@@ -7,9 +7,10 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { AdminsModule } from '../admins';
 import { FileUploadModule } from '../file-upload';
+import {LoggerModule} from '../logging';
 
 @Module({
-  imports: [AdminsModule, FileUploadModule],
+  imports: [AdminsModule, FileUploadModule, LoggerModule],
   controllers: [NotificationsController],
   providers: [NotificationRepository, NotificationsService, JwtService],
 })

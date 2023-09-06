@@ -1,10 +1,11 @@
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 import {
   IsNotEmpty,
   IsOptional,
   IsString,
   IsObject,
   ValidateNested,
+  Matches,
 } from 'class-validator';
 
 class Link {
@@ -43,4 +44,8 @@ export class AddNotificationDto {
   @IsObject()
   @IsOptional()
   links: Link;
+}
+export class ExamDateDto{
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, {message: 'Invalid date format. Use "yyyy-mm-dd" format.'})
+  date:string;
 }

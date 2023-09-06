@@ -33,6 +33,10 @@ class Link {
 export class AddNotificationDto {
   @IsNotEmpty()
   @IsString()
+  heading:string; 
+
+  @IsNotEmpty()
+  @IsString()
   title: string;
 
   @IsNotEmpty()

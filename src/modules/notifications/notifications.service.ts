@@ -58,8 +58,8 @@ export class NotificationsService {
     image: Express.Multer.File,
   ): Promise<Notification> {
     const imageUrl = await this.fileUploadService.uploadFile(image);
-    const { title, text, links } = addNotificationDto;
-    const data = { title, text, imageUrl, links: { create: links } };
+    const { title, text, links, heading } = addNotificationDto;
+    const data = { title, text, imageUrl, links: { create: links }, heading };
     const notification = await this.repository.addNotification({ data });
     return notification;
   }
@@ -135,7 +135,7 @@ export class NotificationsService {
       (examDate.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24);
     return daysDifference >= 0 ? Math.round(daysDifference) : 0;
   }
-  
+
   /**
    * verifies on start up that the date.json exist and that it has a field "examDate"
    */

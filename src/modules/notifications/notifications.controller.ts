@@ -36,7 +36,7 @@ export class NotificationsController extends HttpController {
     return this.send({ notification, daystoExam });
   }
 
-  //@UseGuards(AdminGuard)
+  @UseGuards(AdminGuard)
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   async addNotifications(

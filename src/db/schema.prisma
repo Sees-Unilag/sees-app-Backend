@@ -12,60 +12,60 @@ datasource db {
 
 // Todo: Add Models for Admin, Notifications and Courses 
 
-
 model Admin {
-  id        String   @id @default(uuid())
-  username  String   @db.VarChar(255)  @unique
-  password  String   @db.VarChar(255)
+  id            String         @id @default(uuid())
+  username      String         @unique @db.VarChar(255)
+  password      String         @db.VarChar(255)
   refreshTokens RefreshToken[]
 }
 
 model Notification {
-  id        String   @id @default(uuid())
-  imageUrl  String
-  title     String   
-  text      String   @db.Text
-  links     Link?
+  id       String @id @default(uuid())
+  imageUrl String
+  heading  String @db.VarChar(255)
+  title    String @db.VarChar(255)
+  text     String @db.Text
+  links    Link?
 }
 
 model Link {
-  id                 String         @id @default(uuid())
-  notificationId     String         @unique
-  notification       Notification   @relation(fields: [notificationId], references: [id], onDelete: Cascade) //This would save us all those if checks when truying to delete a notification object
-  facebook           String?
-  instagram          String?
-  twitter            String?
-  linkedIn           String?
-  github             String?
+  id             String       @id @default(uuid())
+  notificationId String       @unique
+  notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade) //This would save us all those if checks when truying to delete a notification object
+  facebook       String?
+  instagram      String?
+  twitter        String?
+  linkedIn       String?
+  github         String?
 }
 
 model Course {
-  id             String         @id @default(uuid())
-  name           String         @db.VarChar(255)  @unique
-  courseCode     String         @unique
-  unit           Int
-  year           Year
-  semester       Semester
-  documents      Document[]
+  id         String     @id @default(uuid())
+  name       String     @unique @db.VarChar(255)
+  courseCode String     @unique
+  unit       Int
+  year       Year
+  semester   Semester
+  documents  Document[]
 }
 
 model Document {
-  id          String     @id @default(uuid())
-  link        String
-  courseId    String
-  name        String
-  course      Course     @relation(fields: [courseId], references: [id])
-  verified    Boolean    @default(true)
-  createdAt   DateTime   @default(now())
+  id        String   @id @default(uuid())
+  link      String
+  courseId  String
+  name      String
+  course    Course   @relation(fields: [courseId], references: [id])
+  verified  Boolean  @default(true)
+  createdAt DateTime @default(now())
 }
 
 model RefreshToken {
-  id            String      @id @default(uuid())
-  adminId String
-  token         String      @unique
-  createdAt     DateTime    @default(now())
-  expiresAt     DateTime
-  admin  Admin @relation(fields: [adminId], references: [id])
+  id        String   @id @default(uuid())
+  adminId   String
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  admin     Admin    @relation(fields: [adminId], references: [id])
 }
 
 enum Semester {

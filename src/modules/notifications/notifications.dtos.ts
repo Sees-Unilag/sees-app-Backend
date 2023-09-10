@@ -33,7 +33,7 @@ class Link {
 export class AddNotificationDto {
   @IsNotEmpty()
   @IsString()
-  heading:string; 
+  heading: string;
 
   @IsNotEmpty()
   @IsString()

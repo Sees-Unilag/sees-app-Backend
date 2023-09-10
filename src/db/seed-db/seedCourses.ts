@@ -5,7 +5,7 @@ const prisma = new PrismaService();
 
 const addCourses = async () => {
   for (const course of coursesJson) {
-    prisma.course.create({
+    await prisma.course.create({
       data: course,
     });
   }

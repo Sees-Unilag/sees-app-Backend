@@ -9,7 +9,7 @@ const seedCourses = async () => {
     await Promise.all(
       coursesJson.map(async (course) => {
         await prisma.course.create({ data: course });
-      })
+      }),
     );
     Logger.log('Successfully added Courses to Database');
   } catch (err) {
@@ -18,4 +18,3 @@ const seedCourses = async () => {
 };
 
 seedCourses();
-

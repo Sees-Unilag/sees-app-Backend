@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Inject, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Inject,
+  Post,
+} from '@nestjs/common';
 import { AdminsService, signInDto } from './';
 import { HttpController } from 'src/common';
 
@@ -10,6 +17,6 @@ export class AdminsController extends HttpController {
   @Post('signin')
   async signIn(@Body() body: signInDto) {
     const token = await this.service.signIn(body);
-    return this.send({token});
+    return this.send({ token });
   }
 }

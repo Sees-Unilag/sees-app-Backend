@@ -7,4 +7,3 @@ export class signInDto {
   @IsString()
   password: string;
 }
-

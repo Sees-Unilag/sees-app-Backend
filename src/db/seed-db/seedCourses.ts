@@ -1,23 +1,21 @@
+import { Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { coursesJson } from './seedCoursesJson';
+import { coursesJson } from './coursesData';
 
 const prisma = new PrismaService();
 
-const addCourses = async () => {
-  for (const course of coursesJson) {
-    await prisma.course.create({
-      data: course,
-    });
-  }
-};
-
 const seedCourses = async () => {
   try {
-    await addCourses();
-    console.log('Successfully addeD Courses to Database');
-  } catch (err: any) {
-    console.log('Error adding Courses to database', err);
+    await Promise.all(
+      coursesJson.map(async (course) => {
+        await prisma.course.create({ data: course });
+      })
+    );
+    Logger.log('Successfully added Courses to Database');
+  } catch (err) {
+    Logger.error('Error adding Courses to database', err);
   }
 };
 
 seedCourses();
+

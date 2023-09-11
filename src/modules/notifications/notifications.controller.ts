@@ -64,7 +64,7 @@ export class NotificationsController extends HttpController {
     return this.send();
   }
 
-  //@UseGuards(AdminGuard)
+  @UseGuards(AdminGuard)
   @Put('exam-date')
   async updateExamDate(@Query() query: ExamDateDto) {
     this.service.updateExamDate(query.date);

@@ -8,9 +8,15 @@ import { AllExceptionsFilter } from './common/exception_filter';
 import { LoggerModule } from './modules/logging';
 import { PrismaModule } from './db';
 import { LoggerMiddleware } from './common/http';
+import { JwtModule } from '@nestjs/jwt';
+import { env } from './config';
 
 @Module({
   imports: [
+    JwtModule.register({
+      global: true,
+      secret: env.jwt_secret,
+    }),
     LoggerModule,
     CoursesModule,
     PrismaModule,

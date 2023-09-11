@@ -30,7 +30,9 @@ export class CourseRepository {
   }
 
   async getCourses(where: Prisma.CourseWhereInput): Promise<Course[]> {
-    const courses = await this.prisma.course.findMany()
+    const courses = await this.prisma.course.findMany({
+      where,
+    });
     return courses;
   }
 

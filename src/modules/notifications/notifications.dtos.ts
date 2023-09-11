@@ -1,10 +1,7 @@
-import { Type, Transform } from 'class-transformer';
 import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsObject,
-  ValidateNested,
   Matches,
 } from 'class-validator';
 
@@ -43,9 +40,6 @@ export class AddNotificationDto {
   @IsString()
   text: string;
 
-  @ValidateNested({ each: true })
-  @Type(() => Link)
-  @IsObject()
   @IsOptional()
   links: Link;
 }

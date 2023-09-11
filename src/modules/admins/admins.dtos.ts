@@ -8,7 +8,3 @@ export class signInDto {
   password: string;
 }
 
-export interface ISignInResponse {
-  refreshToken: string;
-  accessToken: string;
-}

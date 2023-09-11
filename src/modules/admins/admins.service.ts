@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AdminRepository, ISignInResponse, signInDto } from './';
+import { AdminRepository,signInDto } from './';
 import { Admin } from '@prisma/client';
 import { compare, hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
@@ -40,7 +40,7 @@ export class AdminsService {
    * @returns the admin
    */
 
-  async signIn(authCredentialsDto: signInDto): Promise<ISignInResponse> {
+  async signIn(authCredentialsDto: signInDto): Promise<string> {
     const { username, password } = authCredentialsDto;
 
     const admin = await this.repository.findAdmin({ username });
@@ -53,45 +53,13 @@ export class AdminsService {
       throw new UnauthorizedException('Invalid Username or Password');
     }
 
-    return await this.generateToken(admin);
-  }
-
-  /**
-   * Generates the access Token and refresh token from the user object
-   * Add the Refresh Token to the database and attach to the user
-   * @param user
-   * @returns
-   */
-  private async generateToken(admin: Admin): Promise<ISignInResponse> {
-    const accessToken = this.createAcessToken(admin);
-    const refreshToken = this.createRefreshToken(admin);
-    const refreshTokenTime = process.env
-      .REFRESHTOKEN_EXPIRY as unknown as number; // no of days
-    const expiresAt = new Date(
-      Date.now() + refreshTokenTime * 24 * 60 * 60 * 1000,
-    );
-    const id = admin.id;
-    await this.repository.createRefreshToken({
-      token: refreshToken,
-      expiresAt,
-      admin: { connect: { id } },
-    });
-    return { refreshToken, accessToken };
+    return this.createAcessToken(admin);
   }
 
   private createAcessToken = (admin: Admin) => {
     return this.jwtService.sign(
-      { id: admin.id, type: 'access' },
+      { id: admin.id },
       { expiresIn: env.accesstoken_expiresat },
-    );
-  };
-
-  private createRefreshToken = (admin: Admin) => {
-    return this.jwtService.sign(
-      { id: admin.id, type: 'refresh' },
-      {
-        expiresIn: env.refreshtoken_expiresat,
-      },
     );
   };
 }

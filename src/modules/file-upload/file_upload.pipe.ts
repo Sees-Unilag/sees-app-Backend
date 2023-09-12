@@ -6,6 +6,9 @@ import {
 } from '@nestjs/common';
 import { env } from 'src/config';
 
+/**
+ * A Reusable Custom Pipe to ensure the file uploaded meets specific Constraints.
+ */
 @Injectable()
 export class FileValidationPipe implements PipeTransform {
   transform(
@@ -56,6 +59,9 @@ export class FileValidationPipe implements PipeTransform {
   }
 }
 
+/**
+ * Ensure the uploaded is an image and does not exceed the max file size.
+ */
 @Injectable()
 export class ImageValidationPipe extends FileValidationPipe {
   transform(

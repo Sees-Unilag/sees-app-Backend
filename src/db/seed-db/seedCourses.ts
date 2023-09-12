@@ -6,11 +6,13 @@ const prisma = new PrismaService();
 
 const seedCourses = async () => {
   try {
-    await Promise.all(
-      coursesJson.map(async (course) => {
-        await prisma.course.create({ data: course });
-      }),
-    );
+    await prisma.$transaction(async (tx) => {
+      Promise.all(
+        coursesJson.map(async (course) => {
+          tx.course.create({ data: course });
+        }),
+      );
+    });
     Logger.log('Successfully added Courses to Database');
   } catch (err) {
     Logger.error('Error adding Courses to database', err);

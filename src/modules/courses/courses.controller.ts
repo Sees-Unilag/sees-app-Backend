@@ -6,9 +6,10 @@ import {
   UseInterceptors,
   UploadedFiles,
   Inject,
+  Query
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { CoursesService, GetCoursesDto } from './';
+import { CoursesService, GetCoursesQuery } from './';
 import { FileValidationPipe } from '../file-upload/';
 import { HttpController, UUIDParam } from 'src/common';
 
@@ -17,8 +18,8 @@ export class CoursesController extends HttpController {
   @Inject() private readonly service: CoursesService;
 
   @Get()
-  async getCourses(@Body() body: GetCoursesDto) {
-    const courses = await this.service.getCourses(body);
+  async getCourses(@Query() query: GetCoursesQuery) {
+    const courses = await this.service.getCourses(query);
     return this.send(courses);
   }
 

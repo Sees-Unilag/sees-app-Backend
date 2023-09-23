@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CourseRepository } from './courses.repository';
 import { Course } from '@prisma/client';
-import { GetCoursesDto } from './courses.dtos';
+import { GetCoursesQuery } from './courses.dtos';
 import { FileUploadService } from '../file-upload';
 import { LoggerService } from '../logging';
 
@@ -28,7 +28,7 @@ export class CoursesService {
    * @param year
    * @param semester
    */
-  async getCourses(getCoursesDto: GetCoursesDto): Promise<Course[]> {
+  async getCourses(getCoursesDto: GetCoursesQuery): Promise<Course[]> {
     const { year, semester } = getCoursesDto;
     return await this.repository.getCourses({ year, semester });
   }

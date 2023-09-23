@@ -12,8 +12,8 @@ const prisma = new PrismaService();
 const seedCourses = async () => {
   try {
     await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      Promise.all(
-        coursesJson.map(async (course) => {
+      await Promise.all(
+        await coursesJson.map(async (course) => {
           tx.course.create({ data: course });
         }),
       );

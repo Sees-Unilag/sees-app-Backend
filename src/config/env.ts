@@ -45,6 +45,12 @@ export class Environment {
 
   @IsNotEmpty()
   exam_date: string;
+
+  @IsNotEmpty()
+  client_stagingurl:string;
+
+  @IsNotEmpty()
+  client_liveurl:string;
 }
 
 config();

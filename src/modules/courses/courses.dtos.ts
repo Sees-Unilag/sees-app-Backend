@@ -1,13 +1,14 @@
 import { Semester, Year } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import { IsEnum } from 'class-validator';
+import { toLowerCase } from 'src/common';
 
 export class GetCoursesQuery {
   @IsEnum(Year)
-  @Transform(({ value }) => (<string>value).toUpperCase())
+  @Transform(toLowerCase)
   year: Year;
 
   @IsEnum(Semester)
-  @Transform(({ value }) => (<string>value).toUpperCase())
+  @Transform(toLowerCase)
   semester: Semester;
 }

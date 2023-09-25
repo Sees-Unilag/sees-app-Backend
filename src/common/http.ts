@@ -96,3 +96,5 @@ export const UUIDParam = createParamDecorator(
     return param;
   },
 );
+
+export const toLowerCase = ({ value }) => (<string>value).toUpperCase();

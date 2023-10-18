@@ -10,14 +10,9 @@ import { AdminsService } from './modules/admins';
 import { NotificationsService } from './modules/notifications';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule)
   app.enableCors({
-    origin:[
-      "http://localhost:3000",
-      env.client_liveurl,
-      env.client_stagingurl
-    ],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+    origin: ["http://localhost:3000", env.client_liveurl, env.client_stagingurl]
   })
   app.use(helmet());
   app.use(responseTime());

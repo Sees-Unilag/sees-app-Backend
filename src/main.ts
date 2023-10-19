@@ -11,9 +11,18 @@ import { NotificationsService } from './modules/notifications';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
-  app.enableCors({
-    origin: ["http://localhost:3000", env.client_liveurl, env.client_stagingurl]
-  })
+  const allowedOrigins = ["http://localhost:3000", env.client_stagingurl, env.client_liveurl]
+   app.enableCors({
+    origin: (origin, callback) => {
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    optionsSuccessStatus: 204
+  });
   app.use(helmet());
   app.use(responseTime());
   app.setGlobalPrefix('/v1');
